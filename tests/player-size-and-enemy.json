@@ -1,0 +1,52 @@
+{
+  "name": "Player Size and Enemy Test",
+  "description": "Verifies that the player is properly scaled down and enemies are spawned and patrolling",
+  "actions": [
+    {
+      "action": "wait",
+      "seconds": 2,
+      "comment": "Wait for game to fully initialize"
+    },
+    {
+      "action": "screenshot",
+      "name": "initial_state",
+      "saveState": true,
+      "comment": "Capture initial game state with player and enemies"
+    },
+    {
+      "action": "assert",
+      "type": "scene",
+      "operator": "equals",
+      "value": "GameScene",
+      "comment": "Verify we're in the game scene"
+    },
+    {
+      "action": "execute_js",
+      "code": "const state = window.__GAME_STATE__.getGameState(); console.log('Player scale:', state.player.scale); console.log('Enemy count:', state.enemyCount); state",
+      "comment": "Log player scale and enemy count"
+    },
+    {
+      "action": "wait",
+      "seconds": 2,
+      "comment": "Let enemies patrol for a bit"
+    },
+    {
+      "action": "screenshot",
+      "name": "enemies_patrolling",
+      "saveState": true,
+      "comment": "Capture enemies in motion"
+    },
+    {
+      "action": "press_key",
+      "key": "ArrowRight",
+      "duration": 500,
+      "comment": "Move player right"
+    },
+    {
+      "action": "screenshot",
+      "name": "player_moved",
+      "saveState": true,
+      "comment": "Verify player movement with new size"
+    }
+  ]
+}

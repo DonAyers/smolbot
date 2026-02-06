@@ -14,6 +14,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this);
         scene.physics.add.existing(this);
         
+        // Scale down the player sprite to be appropriately sized
+        this.setScale(0.25);
+        
         // Physics properties
         this.setBounce(0.2);
         this.setCollideWorldBounds(true);

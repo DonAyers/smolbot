@@ -1,0 +1,86 @@
+{
+  "name": "Side-Scrolling Level Test",
+  "description": "Verifies the expanded world with side-scrolling camera, tall buildings, and parallax background",
+  "actions": [
+    {
+      "action": "wait",
+      "seconds": 3,
+      "comment": "Wait for level generation to complete"
+    },
+    {
+      "action": "screenshot",
+      "name": "level_start",
+      "saveState": true,
+      "comment": "Capture starting position"
+    },
+    {
+      "action": "press_key",
+      "key": "ArrowRight",
+      "duration": 2000,
+      "comment": "Move right to test side-scrolling"
+    },
+    {
+      "action": "screenshot",
+      "name": "scrolled_right",
+      "saveState": true,
+      "comment": "Verify camera follows player"
+    },
+    {
+      "action": "wait",
+      "ms": 500
+    },
+    {
+      "action": "press_key",
+      "key": "Space",
+      "duration": 100,
+      "comment": "Jump"
+    },
+    {
+      "action": "wait",
+      "ms": 300
+    },
+    {
+      "action": "press_key",
+      "key": "ArrowRight",
+      "duration": 1500,
+      "comment": "Continue moving right while in air"
+    },
+    {
+      "action": "screenshot",
+      "name": "mid_level",
+      "saveState": true,
+      "comment": "Capture mid-level exploration"
+    },
+    {
+      "action": "press_key",
+      "key": "Space",
+      "duration": 100,
+      "comment": "Jump up building"
+    },
+    {
+      "action": "wait",
+      "ms": 500
+    },
+    {
+      "action": "press_key",
+      "key": "Space",
+      "duration": 100,
+      "comment": "Jump again"
+    },
+    {
+      "action": "wait",
+      "ms": 500
+    },
+    {
+      "action": "screenshot",
+      "name": "vertical_exploration",
+      "saveState": true,
+      "comment": "Verify vertical movement on tall structures"
+    },
+    {
+      "action": "execute_js",
+      "code": "const state = window.__GAME_STATE__.getGameState(); console.log('Player position:', state.player.x, state.player.y); console.log('World bounds:', window.__GAME_INSTANCE__.physics.world.bounds); state",
+      "comment": "Log world size and player position"
+    }
+  ]
+}

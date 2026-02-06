@@ -1,5 +1,5 @@
 {
-  "name": "smallbot",
+  "name": "smolbot",
   "version": "1.0.0",
   "description": "A procedurally generated 2D platformer built with Phaser 3",
   "type": "module",
@@ -8,9 +8,15 @@
     "build": "vite build",
     "preview": "vite preview",
     "stop": "node stop-server.js",
-    "restart": "npm run stop && npm run dev"
+    "restart": "npm run stop && npm run dev",
+    "test:agent": "node agent-runner.js"
   },
-  "keywords": ["phaser", "game", "platformer", "procedural-generation"],
+  "keywords": [
+    "phaser",
+    "game",
+    "platformer",
+    "procedural-generation"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -19,6 +25,8 @@
     "simplex-noise": "^4.0.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "playwright": "^1.58.2",
     "vite": "^7.3.1"
   }
 }

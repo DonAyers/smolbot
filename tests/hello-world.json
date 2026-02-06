@@ -1,0 +1,37 @@
+{
+  "name": "Hello World Test",
+  "description": "Verifies the agent test runner can launch the game, check for canvas, capture state, and take screenshots",
+  "actions": [
+    {
+      "action": "wait",
+      "seconds": 2,
+      "comment": "Wait for game to fully initialize"
+    },
+    {
+      "action": "check_canvas",
+      "comment": "Verify the Phaser canvas element exists"
+    },
+    {
+      "action": "screenshot",
+      "name": "initial_load",
+      "saveState": true,
+      "comment": "Capture initial game state"
+    },
+    {
+      "action": "assert",
+      "type": "scene",
+      "operator": "not_null",
+      "comment": "Verify a scene is active"
+    },
+    {
+      "action": "wait",
+      "ms": 1000
+    },
+    {
+      "action": "screenshot",
+      "name": "after_wait",
+      "saveState": true,
+      "comment": "Capture state after waiting"
+    }
+  ]
+}
