@@ -1,0 +1,24 @@
+{
+  "name": "smallbot",
+  "version": "1.0.0",
+  "description": "A procedurally generated 2D platformer built with Phaser 3",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "stop": "node stop-server.js",
+    "restart": "npm run stop && npm run dev"
+  },
+  "keywords": ["phaser", "game", "platformer", "procedural-generation"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "generate-maze": "^1.1.0",
+    "phaser": "^3.90.0",
+    "simplex-noise": "^4.0.3"
+  },
+  "devDependencies": {
+    "vite": "^7.3.1"
+  }
+}
