@@ -1,124 +1,121 @@
 import Phaser from 'phaser';
 
+const PLAYER_COLORS = ['blue', 'green', 'yellow'];
+
 export default class Player extends Phaser.Physics.Arcade.Sprite {
-    /**
-     * @param {Phaser.Scene} scene 
-     * @param {number} x 
-     * @param {number} y 
-     * @param {string} texture - Texture key ('player' for spritesheet, 'player-idle' for individual PNG)
-     */
-    constructor(scene, x, y, texture = null) {
-        super(scene, x, y, texture);
+    constructor(scene, x, y, colorIndex = null) {
+        // Pick a robot color
+        const color = colorIndex !== null
+            ? PLAYER_COLORS[colorIndex % PLAYER_COLORS.length]
+            : PLAYER_COLORS[Math.floor(Math.random() * PLAYER_COLORS.length)];
         
-        // Add to scene and enable physics
+        super(scene, x, y, 'robots', `robot_${color}Drive1.png`);
+        this.robotColor = color;
+        
         scene.add.existing(this);
         scene.physics.add.existing(this);
         
-        // Scale down the player sprite to be appropriately sized
-        this.setScale(0.25);
+        // Scale robot to a good game size (~55px tall)
+        this.setScale(0.35);
         
-        // Physics properties
-        this.setBounce(0.2);
+        this.setBounce(0);
         this.setCollideWorldBounds(true);
-        this.setGravityY(0); // Gravity is set globally in config
+        this.setGravityY(0);
+        this.setDragX(0);
         
-        // Player properties
-        this.speed = 160;
-        this.jumpForce = -500;
+        // Tighter physics body
+        this.body.setSize(this.width * 0.7, this.height * 0.85);
+        this.body.setOffset(this.width * 0.15, this.height * 0.15);
         
-        // If no sprite is loaded, create a simple rectangle for testing
-        if (!texture || !this.scene.textures.exists(texture)) {
-            this.displayWidth = 32;
-            this.displayHeight = 32;
-            const graphics = scene.make.graphics({ x: 0, y: 0 }, false);
-            graphics.fillStyle(0x00ff00, 1);
-            graphics.fillRect(0, 0, 32, 32);
-            graphics.generateTexture('player-temp', 32, 32);
-            this.setTexture('player-temp');
-            graphics.destroy();
-        }
+        // Movement tuning
+        this.speed = 220;
+        this.jumpForce = -480;
+        this.jumpHoldForce = -35;   // extra upward force while holding jump
+        this.maxJumpHoldTime = 200; // ms you can hold jump for extra height
+        this.airControlFactor = 0.85; // horizontal control while airborne
         
-        // Set up controls
+        // Coyote time & jump buffer
+        this.coyoteTime = 90;       // ms grace period after leaving ground
+        this.jumpBufferTime = 120;  // ms buffer for pressing jump early
+        this._lastGroundedAt = 0;
+        this._jumpPressedAt = 0;
+        this._jumpHeldSince = 0;
+        this._isJumping = false;
+        
+        // Controls
         this.cursors = scene.input.keyboard.createCursorKeys();
         
-        // Try to play idle animation if it exists
-        if (this.anims && this.anims.exists('robot-idle')) {
-            this.play('robot-idle');
-        } else if (this.anims && this.anims.exists('player-idle')) {
-            this.play('player-idle');
-        }
+        // Animation prefix for this color
+        this._animPrefix = color;
+        this.play(`${color}-idle`);
     }
 
-    update() {
-        // Horizontal movement
+    update(time, delta) {
+        const onGround = this.body.blocked.down || this.body.touching.down;
+        
+        if (onGround) {
+            this._lastGroundedAt = time;
+            this._isJumping = false;
+        }
+        
+        const canCoyoteJump = (time - this._lastGroundedAt) < this.coyoteTime;
+        const wantJump = this.cursors.up.isDown || (this.cursors.space && this.cursors.space.isDown);
+        
+        // Record jump press for buffer
+        if (Phaser.Input.Keyboard.JustDown(this.cursors.up) || 
+            (this.cursors.space && Phaser.Input.Keyboard.JustDown(this.cursors.space))) {
+            this._jumpPressedAt = time;
+        }
+        
+        const hasBufferedJump = (time - this._jumpPressedAt) < this.jumpBufferTime;
+        
+        // --- Horizontal movement ---
+        const accel = onGround ? 1.0 : this.airControlFactor;
+        
         if (this.cursors.left.isDown) {
-            this.setVelocityX(-this.speed);
+            this.setVelocityX(-this.speed * accel);
             this.setFlipX(true);
-            
-            // Play walk animation if exists and grounded
-            if (this.body.touching.down) {
-                if (this.anims.exists('robot-walk')) {
-                    this.play('robot-walk', true);
-                } else if (this.anims.exists('player-walk')) {
-                    this.play('player-walk', true);
-                }
-            }
+            if (onGround) this.play(`${this._animPrefix}-walk`, true);
         } else if (this.cursors.right.isDown) {
-            this.setVelocityX(this.speed);
+            this.setVelocityX(this.speed * accel);
             this.setFlipX(false);
-            
-            // Play walk animation if exists and grounded
-            if (this.body.touching.down) {
-                if (this.anims.exists('robot-walk')) {
-                    this.play('robot-walk', true);
-                } else if (this.anims.exists('player-walk')) {
-                    this.play('player-walk', true);
-                }
-            }
+            if (onGround) this.play(`${this._animPrefix}-walk`, true);
         } else {
-            this.setVelocityX(0);
-            
-            // Play idle animation if exists and grounded
-            if (this.body.touching.down) {
-                if (this.anims.exists('robot-idle')) {
-                    this.play('robot-idle', true);
-                } else if (this.anims.exists('player-idle')) {
-                    this.play('player-idle', true);
-                }
+            // Ground friction: stop quickly, air: drift a little
+            if (onGround) {
+                this.setVelocityX(0);
+                this.play(`${this._animPrefix}-idle`, true);
+            } else {
+                this.setVelocityX(this.body.velocity.x * 0.92); // gentle air drag
             }
         }
         
-        // Jump (only if touching ground)
-        if (this.cursors.up.isDown && this.body.touching.down) {
+        // --- Jump ---
+        if ((hasBufferedJump || wantJump) && (onGround || canCoyoteJump) && !this._isJumping) {
             this.setVelocityY(this.jumpForce);
-            
-            // Play jump animation if exists
-            if (this.anims.exists('robot-jump')) {
-                this.play('robot-jump');
-            } else if (this.anims.exists('player-jump')) {
-                this.play('player-jump');
+            this._isJumping = true;
+            this._jumpHeldSince = time;
+            this._jumpPressedAt = 0; // consume buffer
+            this._lastGroundedAt = 0; // consume coyote
+            this.play(`${this._animPrefix}-jump`);
+        }
+        
+        // Variable jump height: hold for higher, release for shorter
+        if (this._isJumping && wantJump && this.body.velocity.y < 0) {
+            const holdDuration = time - this._jumpHeldSince;
+            if (holdDuration < this.maxJumpHoldTime) {
+                this.body.velocity.y += this.jumpHoldForce;
             }
         }
         
-        // Space bar alternative for jump
-        if (this.cursors.space && this.cursors.space.isDown && this.body.touching.down) {
-            this.setVelocityY(this.jumpForce);
-            
-            // Play jump animation if exists
-            if (this.anims.exists('robot-jump')) {
-                this.play('robot-jump');
-            } else if (this.anims.exists('player-jump')) {
-                this.play('player-jump');
-            }
+        // Cut jump short if released early
+        if (this._isJumping && !wantJump && this.body.velocity.y < this.jumpForce * 0.4) {
+            this.body.velocity.y = this.jumpForce * 0.4;
         }
         
-        // Play fall animation if in air and moving down
-        if (!this.body.touching.down && this.body.velocity.y > 0) {
-            if (this.anims.exists('robot-fall')) {
-                this.play('robot-fall', true);
-            } else if (this.anims.exists('player-fall')) {
-                this.play('player-fall', true);
-            }
+        // Fall animation
+        if (!onGround && this.body.velocity.y > 50) {
+            this.play(`${this._animPrefix}-hurt`, true); // use hurt frame as fall
         }
     }
 }

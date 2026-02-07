@@ -1,0 +1,26 @@
+{
+  "name": "Visual Verification Test",
+  "description": "Captures screenshots at multiple points to verify buildings, player robot sprite, and level structure",
+  "actions": [
+    {"action": "wait", "seconds": 2, "comment": "Let game initialize"},
+    {"action": "check_canvas"},
+    {"action": "screenshot", "name": "spawn_point", "saveState": true},
+    {"action": "assert", "type": "scene", "operator": "equals", "value": "GameScene"},
+    {"action": "assert", "type": "player_x", "operator": "not_null"},
+    
+    {"action": "press_key", "key": "ArrowRight", "duration": 3000, "comment": "Walk right past first building"},
+    {"action": "screenshot", "name": "past_first_building", "saveState": true},
+    {"action": "assert", "type": "player_x", "operator": "greater_than", "value": 200},
+    
+    {"action": "press_key", "key": "Space", "duration": 100, "comment": "Jump"},
+    {"action": "wait", "ms": 600},
+    {"action": "screenshot", "name": "mid_jump", "saveState": true},
+    
+    {"action": "press_key", "key": "ArrowRight", "duration": 4000, "comment": "Walk further right"},
+    {"action": "screenshot", "name": "mid_level", "saveState": true},
+    
+    {"action": "press_key", "key": "ArrowRight", "duration": 5000, "comment": "Traverse most of level"},
+    {"action": "screenshot", "name": "far_right", "saveState": true},
+    {"action": "assert", "type": "player_x", "operator": "greater_than", "value": 400}
+  ]
+}

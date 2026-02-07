@@ -54,7 +54,8 @@ if (import.meta.env.DEV) {
                     velocityY: player.body?.velocity.y || 0,
                     visible: player.visible,
                     active: player.active,
-                    scale: player.scale
+                    scale: player.scale,
+                    color: player.robotColor || 'unknown'
                 } : null,
                 enemies: enemies.map(enemy => ({
                     x: enemy.x,

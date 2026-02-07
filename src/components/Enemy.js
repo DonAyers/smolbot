@@ -1,50 +1,41 @@
 import Phaser from 'phaser';
 
+const ENEMY_COLORS = ['red', 'yellow', 'green'];
+
 export default class Enemy extends Phaser.Physics.Arcade.Sprite {
-    /**
-     * @param {Phaser.Scene} scene 
-     * @param {number} x 
-     * @param {number} y 
-     * @param {string} texture - Enemy texture key
-     * @param {number} patrolDistance - Distance to patrol left/right
-     */
     constructor(scene, x, y, texture = 'enemy-idle', patrolDistance = 100) {
-        super(scene, x, y, texture);
-        
-        // Add to scene and enable physics
+        // Pick a random enemy color
+        const color = ENEMY_COLORS[Math.floor(Math.random() * ENEMY_COLORS.length)];
+        super(scene, x, y, 'robots', `robot_${color}Body.png`);
+        this.enemyColor = color;
+
         scene.add.existing(this);
         scene.physics.add.existing(this);
-        
-        // Scale down to match player size
-        this.setScale(0.25);
-        
-        // Physics properties
+
+        // Scale to match player size
+        this.setScale(0.3);
+
         this.setBounce(0);
         this.setCollideWorldBounds(true);
-        this.setGravityY(0); // Gravity is set globally in config
-        
-        // Enemy properties
-        this.speed = 50;
+        this.setGravityY(0);
+
+        // Tighter physics body
+        this.body.setSize(this.width * 0.7, this.height * 0.85);
+        this.body.setOffset(this.width * 0.15, this.height * 0.15);
+
+        this.speed = 40 + Math.random() * 40; // vary speed
         this.patrolDistance = patrolDistance;
         this.startX = x;
-        this.direction = 1; // 1 = right, -1 = left
-        
-        // Try to play idle animation if it exists
-        if (this.anims && this.anims.exists('enemy-walk')) {
-            this.play('enemy-walk');
-        } else if (this.anims && this.anims.exists('enemy-idle')) {
-            this.play('enemy-idle');
-        }
+        this.direction = Math.random() < 0.5 ? 1 : -1;
+
+        // Use the color-specific walk animation
+        this.play(`${color}-walk`, true);
     }
 
     update() {
-        // Simple patrol behavior
         this.setVelocityX(this.speed * this.direction);
-        
-        // Flip sprite based on direction
         this.setFlipX(this.direction < 0);
-        
-        // Change direction when reaching patrol boundaries
+
         if (this.direction > 0 && this.x >= this.startX + this.patrolDistance) {
             this.direction = -1;
         } else if (this.direction < 0 && this.x <= this.startX - this.patrolDistance) {

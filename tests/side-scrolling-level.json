@@ -79,7 +79,7 @@
     },
     {
       "action": "execute_js",
-      "code": "const state = window.__GAME_STATE__.getGameState(); console.log('Player position:', state.player.x, state.player.y); console.log('World bounds:', window.__GAME_INSTANCE__.physics.world.bounds); state",
+      "code": "const state = window.__GAME_STATE__.getGameState(); console.log('Player position:', state.player.x, state.player.y); const scene = window.__GAME_STATE__.getScene(); const bounds = scene.physics.world.bounds; console.log('World bounds:', bounds.width, 'x', bounds.height); state",
       "comment": "Log world size and player position"
     }
   ]
