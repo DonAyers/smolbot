@@ -146,8 +146,11 @@ export default class BootScene extends Phaser.Scene {
             const prefix = color;
             this.anims.create({
                 key: `${prefix}-idle`,
-                frames: [{ key: 'robots', frame: `robot_${color}Drive1.png` }],
-                frameRate: 1
+                frames: [
+                    { key: 'robots', frame: `robot_${color}Drive1.png` }
+                ],
+                frameRate: 1,
+                repeat: 0
             });
             this.anims.create({
                 key: `${prefix}-walk`,
@@ -173,8 +176,11 @@ export default class BootScene extends Phaser.Scene {
         // Legacy aliases so old code still works
         this.anims.create({
             key: 'robot-idle',
-            frames: [{ key: 'robots', frame: 'robot_blueDrive1.png' }],
-            frameRate: 1
+            frames: [
+                { key: 'robots', frame: 'robot_blueDrive1.png' }
+            ],
+            frameRate: 1,
+            repeat: 0
         });
         this.anims.create({
             key: 'robot-walk',
