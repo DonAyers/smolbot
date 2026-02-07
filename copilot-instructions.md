@@ -12,11 +12,20 @@ Smolbot is a procedurally generated 2D side-scrolling platformer built with:
 ## Key Architecture Decisions
 
 ### Asset Management
-- **Tile size:** 64x64 pixels for platforms, 70x70 for building tiles
+- **Tile size:** 18x18 pixels for building tiles (brick-wall, brick-window, brick-door)
 - **Sprite scale:** Player and enemies are scaled to 0.25 (25%) to match world size
+- **Robot sprites:** ~157x150px frames, scaled to ~40x37px in-game
 - **Asset source:** Kenney asset packs (stored in `kenney_*/` folders, excluded from git)
 - **Active assets:** Only copy needed assets to `public/assets/images/`
 - **Unused assets:** Delete from public folder to keep repo clean
+- **Spritesheet format:** Using atlasXML for robot sprites (spritesheet_robotsSide.png + .xml)
+
+### Animation System
+- **Format:** Texture atlas with XML definition
+- **Player animations:** robot-idle, robot-walk (with tank treads), robot-jump, robot-fall
+- **Enemy animations:** enemy-idle, enemy-walk
+- **Frame naming:** robot_blueBody.png, robot_blueDrive1.png, robot_redBody.png, etc.
+- **Setup location:** BootScene.create() method
 
 ### World Structure
 - **World bounds:** 4000x2400 (5x wider, 4x taller than viewport)

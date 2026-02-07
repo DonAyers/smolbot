@@ -1,0 +1,45 @@
+{
+  "name": "Small Tiles and Robot Spritesheet Test",
+  "description": "Verifies 18x18 tiles, robot spritesheet with tank treads, and proper scaling",
+  "actions": [
+    {
+      "action": "wait",
+      "seconds": 3,
+      "comment": "Wait for building generation"
+    },
+    {
+      "action": "screenshot",
+      "name": "new_scale_start",
+      "saveState": true,
+      "comment": "Capture new scale and sprites"
+    },
+    {
+      "action": "press_key",
+      "key": "ArrowRight",
+      "duration": 2000,
+      "comment": "Move right to see buildings and animation"
+    },
+    {
+      "action": "screenshot",
+      "name": "walking_animation",
+      "saveState": true,
+      "comment": "Capture robot with treads walking"
+    },
+    {
+      "action": "press_key",
+      "key": "Space",
+      "duration": 100,
+      "comment": "Jump"
+    },
+    {
+      "action": "wait",
+      "ms": 300
+    },
+    {
+      "action": "screenshot",
+      "name": "jumping",
+      "saveState": true,
+      "comment": "Capture jump animation"
+    }
+  ]
+}

@@ -9,14 +9,41 @@ export default class GameScene extends Phaser.Scene {
     }
 
     create() {
-        // Add parallax background
-        const bg = this.add.image(0, 0, 'background').setOrigin(0, 0);
-        bg.setScrollFactor(0.3); // Slower scroll for parallax effect
+        const levelWidth = 4000;
+        const levelHeight = 1200;
         
-        // Tile the background to cover the expanded world
-        for (let i = 1; i < 3; i++) {
-            const bgTile = this.add.image(bg.width * i, 0, 'background').setOrigin(0, 0);
-            bgTile.setScrollFactor(0.3);
+        // --- Parallax background layers ---
+        // Sky gradient fill behind everything
+        const skyGraphics = this.add.graphics();
+        skyGraphics.fillGradientStyle(0x87CEEB, 0x87CEEB, 0xC8E6FF, 0xC8E6FF, 1);
+        skyGraphics.fillRect(0, 0, levelWidth, levelHeight);
+        skyGraphics.setScrollFactor(0).setDepth(-10);
+        
+        // Far clouds layer (slowest parallax)
+        const cloudScale = 2;
+        const cloudTileW = 256 * cloudScale;
+        const cloudTileH = 256 * cloudScale;
+        const numCloudTiles = Math.ceil(levelWidth / cloudTileW) + 1;
+        for (let i = 0; i < numCloudTiles; i++) {
+            const cloud = this.add.image(i * cloudTileW, 50, 'bg_clouds')
+                .setOrigin(0, 0)
+                .setDisplaySize(cloudTileW, cloudTileH)
+                .setScrollFactor(0.1)
+                .setDepth(-9)
+                .setAlpha(0.7);
+        }
+        
+        // Hills layer (medium parallax)
+        const hillScale = 2.5;
+        const hillTileW = 256 * hillScale;
+        const hillTileH = 256 * hillScale;
+        const numHillTiles = Math.ceil(levelWidth / hillTileW) + 1;
+        for (let i = 0; i < numHillTiles; i++) {
+            this.add.image(i * hillTileW, levelHeight - hillTileH - 20, 'bg_hills')
+                .setOrigin(0, 0)
+                .setDisplaySize(hillTileW, hillTileH)
+                .setScrollFactor(0.3)
+                .setDepth(-8);
         }
         
         // Initialize the procedural level generator
@@ -25,8 +52,8 @@ export default class GameScene extends Phaser.Scene {
         // Generate a level (this will create platforms and obstacles)
         const platforms = levelGenerator.generateLevel();
         
-        // Add player character
-        this.player = new Player(this, 100, 450, 'robot-idle');
+        // Add player character with robot spritesheet
+        this.player = new Player(this, 100, 1000);
         this.physics.add.collider(this.player, platforms);
         
         // Make camera follow the player with smooth lerp
@@ -71,29 +98,28 @@ export default class GameScene extends Phaser.Scene {
     }
     
     spawnEnemies(platforms) {
-        // Spawn enemies on some platforms
-        const platformChildren = platforms.getChildren();
+        // Spawn enemies along the ground at intervals
+        const groundY = 1060; // slightly above ground level
+        const levelWidth = 4000;
+        const numEnemies = 4 + Math.floor(Math.random() * 4);
         
-        // Pick a few platforms to spawn enemies on (skip the first few near spawn)
-        for (let i = 5; i < platformChildren.length; i += 3) {
-            const platform = platformChildren[i];
-            if (platform) {
-                const enemy = new Enemy(
-                    this, 
-                    platform.x, 
-                    platform.y - 50, 
-                    'enemy-idle',
-                    80 // patrol distance
-                );
-                this.enemies.add(enemy);
-            }
+        for (let i = 0; i < numEnemies; i++) {
+            const x = 400 + (levelWidth - 800) * (i / numEnemies) + Math.random() * 200;
+            const enemy = new Enemy(
+                this,
+                x,
+                groundY,
+                'enemy-idle',
+                120
+            );
+            this.enemies.add(enemy);
         }
     }
 
-    update() {
+    update(time, delta) {
         // Update player
         if (this.player) {
-            this.player.update();
+            this.player.update(time, delta);
         }
         
         // Update all enemies

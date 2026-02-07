@@ -1,0 +1,46 @@
+{
+  "name": "Building Structure Test",
+  "description": "Verifies proper building assembly with walls, windows, doors, and roofs",
+  "actions": [
+    {
+      "action": "wait",
+      "seconds": 3,
+      "comment": "Wait for building generation"
+    },
+    {
+      "action": "screenshot",
+      "name": "buildings_start",
+      "saveState": true,
+      "comment": "Capture first buildings"
+    },
+    {
+      "action": "press_key",
+      "key": "ArrowRight",
+      "duration": 3000,
+      "comment": "Scroll right to see more buildings"
+    },
+    {
+      "action": "screenshot",
+      "name": "buildings_mid",
+      "saveState": true,
+      "comment": "Capture middle section buildings"
+    },
+    {
+      "action": "press_key",
+      "key": "ArrowRight",
+      "duration": 3000,
+      "comment": "Continue scrolling"
+    },
+    {
+      "action": "screenshot",
+      "name": "buildings_end",
+      "saveState": true,
+      "comment": "Capture end section buildings"
+    },
+    {
+      "action": "execute_js",
+      "code": "const state = window.__GAME_STATE__.getGameState(); console.log('Platform count:', window.__GAME_INSTANCE__.physics.world.staticBodies.size); state",
+      "comment": "Check number of building tiles"
+    }
+  ]
+}
