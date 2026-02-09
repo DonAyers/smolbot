@@ -1,17 +1,259 @@
-# AI Agent Testing Guide for Smolbot
+# AI Agent Guide for Smolbot
 
 ## Overview
 
-This document explains how AI agents can autonomously develop, test, and verify changes to the Smolbot Phaser.js game using the headless testing framework.
+This document explains how AI agents can autonomously develop, test, and manage assets for the Smolbot Phaser.js game.
 
-## Architecture
+## Table of Contents
+
+1. [Autonomous Improvement System](#autonomous-improvement-system) ⭐ NEW
+2. [Testing Framework](#testing-framework)
+3. [Asset Organization](#asset-organization)
+4. [Animation Debugging](#animation-debugging)
+
+---
+
+## Autonomous Improvement System
+
+### 🚀 Quick Start
+
+```bash
+# Create improvement task
+npm run improve create "Building Improvements" "Add more variety" buildings
+
+# Run autonomous agent (3 iterations)
+npm run improve:auto task_<id> 3
+
+# Execute the generated sub-agent prompts
+copilot --allow-all-tools -p "$(cat improvement-tasks/task_<id>/prompt-iteration-1.txt)"
+```
+
+### What It Does
+
+The autonomous system enables **fully automated improvement loops**:
+
+1. **🔍 Reference Finding**: Agent searches for inspiration images from seed games
+2. **📊 Analysis**: Compares current implementation with references  
+3. **🛠️ Implementation**: Makes code improvements iteratively
+4. **🎨 Asset Discovery**: Finds or generates needed assets
+5. **📸 Testing**: Captures and compares screenshots
+6. **📝 Documentation**: Records all changes automatically
+
+### Key Features
+
+✅ **Sub-Agent Spawning**: Uses Copilot CLI to run specialized agents  
+✅ **Web Search Integration**: Finds references from Megaman, Fez, FTL, etc.  
+✅ **Asset Discovery**: Searches OpenGameArt.org, Itch.io, Kenney.nl  
+✅ **Iterative Loop**: Multiple improvement cycles with testing  
+✅ **Full Documentation**: Auto-generates notes and comparisons  
+
+### Quick Commands
+
+| Command | Purpose |
+|---------|---------|
+| `npm run improve create` | Create new improvement task |
+| `npm run improve:auto task_<id> 3` | Generate agent prompts for 3 iterations |
+| `npm run assets:find task_<id> "asset"` | Find or generate assets |
+| `npm run improve list` | View all tasks and progress |
+| `npm run improve complete task_<id>` | Mark task complete |
+
+### Full Documentation
+
+📖 **[AUTONOMOUS_AGENTS.md](./AUTONOMOUS_AGENTS.md)** - Complete system guide  
+📖 **[AUTONOMOUS_QUICK_START.md](./AUTONOMOUS_QUICK_START.md)** - 5-minute tutorial  
+
+### Example Workflow
+
+```bash
+# 1. Create task
+npm run improve create "Better Buildings" "More architectural details" buildings
+
+# 2. Run auto-agent (creates prompts)
+npm run improve:auto task_1234567890 3
+
+# 3. Execute reference search agent
+copilot --allow-all-tools -p "$(cat improvement-tasks/task_1234567890/prompt-find-references.txt)"
+
+# 4. Execute improvement iterations (1, 2, 3)
+copilot --allow-all-tools -p "$(cat improvement-tasks/task_1234567890/prompt-iteration-1.txt)"
+# ... repeat for each iteration
+
+# 5. If assets needed
+npm run assets:find task_1234567890 "neon signs" "Glowing signs for buildings"
+copilot -p "$(cat improvement-tasks/task_1234567890/asset-discovery-prompt.txt)"
+
+# 6. Review and complete
+npm run improve list
+npm run improve complete task_1234567890 "Looks great!"
+```
+
+---
+
+## Testing Framework
+
+### Quick Start
+
+```bash
+npm run test:agent -- tests/hello-world.json
+```
+
+Full documentation: See sections below for complete testing guide.
+
+---
+
+## Asset Organization
+
+### Quick Start
+
+```bash
+# 1. Add assets to staging folder
+mkdir to-be-processed-assets
+# Extract/copy your assets there
+
+# 2. Preview organization
+npm run organize-assets:preview
+
+# 3. Organize assets
+npm run organize-assets
+```
+
+### Workflow for AI Agents
+
+When a user mentions adding assets:
+
+```javascript
+// Option 1: Use watcher (recommended)
+const watcherRunning = await checkProcess('asset-watcher');
+if (!watcherRunning) {
+    console.log('💡 Tip: Run `npm run watch-assets` for automatic processing');
+    await askUser('Start asset watcher?');
+}
+
+// Option 2: Manual processing
+const stagingFolder = 'to-be-processed-assets';
+if (fs.existsSync(stagingFolder) && hasFiles(stagingFolder)) {
+    
+    // 2. Run dry-run to preview
+    const preview = await runCommand('npm run organize-assets:dry-run');
+    
+    // 3. Check for unclassified files
+    if (preview.includes('Unclassified files')) {
+        // Report to user and ask for guidance
+    }
+    
+    // 4. Execute organization
+    await runCommand('npm run organize-assets');
+    
+    // 5. Review manifest
+    const manifest = JSON.parse(fs.readFileSync('asset-manifest.json'));
+    
+    // 6. Update BootScene.js with new asset loads
+    // 7. Test in-game
+    // 8. Clean up staging folder
+}
+```
+
+### Staging Folders
+
+Two folder names are auto-detected:
+- `to-be-processed-assets/` (recommended)
+- `asset-sources/`
+
+Both are gitignored automatically.
+
+### Target Structure
+
+```
+public/assets/
+├── images/
+│   ├── backgrounds/     ← clouds, hills, sky
+│   ├── buildings/       ← houses, roofs, windows
+│   ├── characters/      ← player sprites
+│   ├── enemies/         ← enemy sprites
+│   ├── environment/     ← trees, rocks, plants
+│   ├── props/           ← barrels, crates, machines
+│   ├── tiles/           ← terrain, platforms
+│   └── ui/              ← buttons, icons
+├── spritesheets/        ← atlases, XML files
+└── audio/               ← sounds, music
+```
+
+### Commands
+
+| Command | Description |
+|---------|-------------|
+| `npm run organize-assets:preview` | Preview without copying |
+| `npm run organize-assets` | Organize from staging folder |
+| `npm run organize-assets -- "path/to/folder"` | Organize specific folder |
+
+### Output
+
+The tool generates:
+- Console output with classification breakdown
+- `asset-manifest.json` with complete file mapping
+- Organized files in target directories
+
+### After Organizing
+
+1. ✅ Update `src/scenes/BootScene.js` with load statements
+2. ✅ Test in-game: `npm run dev`
+3. ✅ Use Sprite Viewer (press V) to verify assets
+4. ✅ Clean staging folder
+
+Full documentation: 
+- `ASSET_WORKFLOW.md` - Manual workflow
+- `ASSET_WATCHER.md` - Automatic watcher service
+
+---
+
+## Animation Debugging
+
+### In-Game Tools
+
+Press these keys while playing:
+- **V** - Open Sprite Viewer (see all atlas frames)
+- **D** - Toggle Animation Debugger (live animation state)
+- **R** - Regenerate level
+
+### Sprite Viewer
+
+Shows all frames in the atlas with:
+- Visual preview of each frame
+- Frame names and categories
+- Bounding boxes
+- Color-coded types (Body, Drive, Jump, Hurt, etc.)
+
+### Animation Debugger
+
+Shows real-time:
+- Current animation name
+- Current frame
+- Animation progress
+- Playback status
+- FPS and repeat settings
+
+### Common Issues
+
+**Treads disappearing**: 
+- Use frames with treads (Drive1, Jump) not Body/Hurt frames
+- Check animation state transitions aren't restarting constantly
+
+**Animation flickering**:
+- Remove `play(anim, true)` from update loops
+- Only call `play()` when animation changes
+
+Full documentation: `ANIMATION_DEBUGGING_LESSONS.md`
+
+---
+
+## Testing Framework (Complete)
 
 The testing framework consists of:
 
-1. **Game State Exposure** (`src/main.js`) - Exposes Phaser game instance and state helpers to the browser's window object
-2. **Test Runner** (`agent-runner.js`) - Playwright-based automation that launches the game and executes test scenarios
-3. **Test Scenarios** (`tests/*.json`) - JSON files describing actions and assertions
-4. **Visual Output** (`tmp/screenshots/`) - Screenshots and state dumps for verification
+1. **Game State Exposure** (`src/main.js`) - Exposes Phaser game instance to browser
+2. **Test Runner** (`agent-runner.js`) - Playwright-based automation
+3. **Test Scenarios** (`tests/*.json`) - JSON test definitions
+4. **Visual Output** (`tmp/screenshots/`) - Screenshots and state dumps
 
 ## Quick Start
 

@@ -2,6 +2,8 @@ import Phaser from 'phaser';
 import ProceduralLevelGenerator from '../utils/ProceduralLevelGenerator';
 import Player from '../components/Player';
 import Enemy from '../components/Enemy';
+import HealthUI from '../components/HealthUI';
+import AnimationDebugger from '../utils/AnimationDebugger';
 
 export default class GameScene extends Phaser.Scene {
     constructor() {
@@ -12,11 +14,20 @@ export default class GameScene extends Phaser.Scene {
         const levelWidth = 4000;
         const levelHeight = 1200;
         
+        // Set world bounds
+        this.physics.world.setBounds(0, 0, levelWidth, levelHeight);
+        
+        // Set camera background color (in case graphics don't cover everything)
+        this.cameras.main.setBackgroundColor('#87CEEB');
+        
         // --- Parallax background layers ---
-        // Sky gradient fill behind everything
+        // Create a sky rectangle that's larger than the screen to ensure full coverage
+        const skyWidth = this.cameras.main.width * 2; // Extra wide
+        const skyHeight = this.cameras.main.height * 2; // Extra tall
+        
         const skyGraphics = this.add.graphics();
         skyGraphics.fillGradientStyle(0x87CEEB, 0x87CEEB, 0xC8E6FF, 0xC8E6FF, 1);
-        skyGraphics.fillRect(0, 0, levelWidth, levelHeight);
+        skyGraphics.fillRect(-skyWidth / 2, -skyHeight / 2, skyWidth, skyHeight);
         skyGraphics.setScrollFactor(0).setDepth(-10);
         
         // Far clouds layer (slowest parallax)
@@ -33,13 +44,14 @@ export default class GameScene extends Phaser.Scene {
                 .setAlpha(0.7);
         }
         
-        // Hills layer (medium parallax)
+        // Hills layer (medium parallax) - positioned at bottom of screen
         const hillScale = 2.5;
         const hillTileW = 256 * hillScale;
         const hillTileH = 256 * hillScale;
         const numHillTiles = Math.ceil(levelWidth / hillTileW) + 1;
         for (let i = 0; i < numHillTiles; i++) {
-            this.add.image(i * hillTileW, levelHeight - hillTileH - 20, 'bg_hills')
+            // Position hills at the bottom of the world
+            this.add.image(i * hillTileW, levelHeight - hillTileH, 'bg_hills')
                 .setOrigin(0, 0)
                 .setDisplaySize(hillTileW, hillTileH)
                 .setScrollFactor(0.3)
@@ -59,6 +71,7 @@ export default class GameScene extends Phaser.Scene {
         // Make camera follow the player with smooth lerp
         this.cameras.main.startFollow(this.player, true, 0.1, 0.1);
         this.cameras.main.setZoom(1);
+        this.cameras.main.setBounds(0, 0, levelWidth, levelHeight);
         
         // Create enemies group
         this.enemies = this.physics.add.group();
@@ -69,8 +82,11 @@ export default class GameScene extends Phaser.Scene {
         // Add collision between enemies and platforms
         this.physics.add.collider(this.enemies, platforms);
         
+        // Add collision between player and enemies (damage)
+        this.physics.add.overlap(this.player, this.enemies, this.handlePlayerEnemyCollision, null, this);
+        
         // Display instructions (fixed to camera)
-        this.add.text(16, 16, 'Side-Scrolling Platformer', {
+        this.add.text(16, 16, 'smolbot', {
             fontSize: '24px',
             fill: '#fff',
             backgroundColor: '#000',
@@ -91,9 +107,28 @@ export default class GameScene extends Phaser.Scene {
             padding: { x: 10, y: 5 }
         }).setScrollFactor(0).setDepth(100);
         
+        this.add.text(16, 110, 'Press V to view sprites', {
+            fontSize: '14px',
+            fill: '#00ffff',
+            backgroundColor: '#000',
+            padding: { x: 10, y: 5 }
+        }).setScrollFactor(0).setDepth(100);
+        
+        // Create Health UI (below instructions)
+        this.healthUI = new HealthUI(this, 20, 145, this.player.stats);
+        
+        // Create Animation Debugger (press D to toggle)
+        this.animDebugger = new AnimationDebugger(this, this.player);
+        
         // Add R key to regenerate level
         this.input.keyboard.on('keydown-R', () => {
             this.scene.restart();
+        });
+        
+        // Add V key to open sprite viewer
+        this.input.keyboard.on('keydown-V', () => {
+            this.scene.pause();
+            this.scene.launch('SpriteViewerScene');
         });
     }
     
@@ -122,9 +157,52 @@ export default class GameScene extends Phaser.Scene {
             this.player.update(time, delta);
         }
         
+        // Update Health UI
+        if (this.healthUI) {
+            this.healthUI.update();
+        }
+        
+        // Update Animation Debugger
+        if (this.animDebugger) {
+            this.animDebugger.update();
+        }
+        
         // Update all enemies
         this.enemies.getChildren().forEach(enemy => {
             enemy.update();
         });
+        
+        // Check for game over
+        if (this.player && this.player.stats.isDead() && !this.gameOverShown) {
+            this.showGameOver();
+        }
+    }
+
+    handlePlayerEnemyCollision(player, enemy) {
+        // Only take damage if not already invulnerable
+        if (!player.stats.isInvulnerable) {
+            player.takeDamage(1);
+        }
+    }
+
+    showGameOver() {
+        this.gameOverShown = true;
+        
+        const centerX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
+        const centerY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
+        
+        const gameOverText = this.add.text(centerX, centerY, 'GAME OVER', {
+            fontSize: '64px',
+            fill: '#ff0000',
+            backgroundColor: '#000',
+            padding: { x: 20, y: 10 }
+        }).setOrigin(0.5).setScrollFactor(0).setDepth(200);
+        
+        const restartText = this.add.text(centerX, centerY + 60, 'Press R to Restart', {
+            fontSize: '24px',
+            fill: '#fff',
+            backgroundColor: '#000',
+            padding: { x: 10, y: 5 }
+        }).setOrigin(0.5).setScrollFactor(0).setDepth(200);
     }
 }

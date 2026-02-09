@@ -9,7 +9,13 @@
     "preview": "vite preview",
     "stop": "node stop-server.js",
     "restart": "npm run stop && npm run dev",
-    "test:agent": "node agent-runner.js"
+    "test:agent": "node agent-runner.js",
+    "organize-assets": "node organize-assets.js",
+    "organize-assets:dry-run": "node organize-assets.js --dry-run",
+    "watch-assets": "node asset-watcher.js",
+    "improve": "node improvement-manager.js",
+    "improve:auto": "node agent-improvement-runner.js run",
+    "assets:find": "node asset-discovery-agent.js search"
   },
   "keywords": [
     "phaser",
@@ -20,12 +26,18 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "chalk": "^5.6.2",
     "generate-maze": "^1.1.0",
+    "ora": "^9.3.0",
     "phaser": "^3.90.0",
+    "pixelmatch": "^7.1.0",
+    "pngjs": "^7.0.0",
     "simplex-noise": "^4.0.3"
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
+    "adm-zip": "^0.5.16",
+    "chokidar": "^5.0.0",
     "playwright": "^1.58.2",
     "vite": "^7.3.1"
   }

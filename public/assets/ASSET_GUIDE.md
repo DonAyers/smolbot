@@ -1,5 +1,26 @@
 # Asset Organization Guide
 
+> **NOTE**: Assets have been reorganized! See [ORGANIZATION.md](./ORGANIZATION.md) for the new structure and complete asset catalog.
+
+---
+
+## Current Organization
+
+Your assets are now organized in `public/assets/` by function:
+- **images/characters/** - Player sprites, robots, NPCs
+- **images/tiles/** - Terrain, platforms, walls (including `tiles/scifi/`)
+- **images/backgrounds/** - Sky, clouds, parallax layers
+- **images/buildings/** - Building components
+- **images/environment/** - Natural decorations
+- **images/props/** - Interactive objects
+- **images/ui/** - Interface elements
+- **spritesheets/** - Pre-packed atlases
+- **audio/** - Sound effects
+
+See [ORGANIZATION.md](./ORGANIZATION.md) for detailed catalog and usage examples.
+
+---
+
 ## Option 1: Individual PNGs (AI-Friendly Approach)
 
 ### Pros

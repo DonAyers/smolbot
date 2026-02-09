@@ -77,6 +77,8 @@ const ROOF_STYLES = [
 
 const WINDOW_TYPES = ['bldg-window', 'windowOpen', 'windowCheckered'];
 const DOOR_TYPES = ['doorKnob', 'doorKnobAlt'];
+const ROOFTOP_PROPS = ['box', 'crate', 'computer', 'machine'];
+const BUILDING_PROPS = ['ac-unit', 'ladder-attached', 'pipe', 'pipe2', 'vent', 'neon'];
 
 const TILE_SIZE = 70; // All building/grass tiles are 70x70
 const BUILDING_SCALE = 0.5; // Scale buildings down to fit better with player
@@ -283,6 +285,9 @@ export default class ProceduralLevelGenerator {
     createBuilding(startX, groundY, widthTiles, floors, style, roofStyle, isTraversable = true) {
         const scaledTileSize = TILE_SIZE * BUILDING_SCALE;
         
+        // Choose window pattern for this building
+        const windowPattern = this.chooseWindowPattern(style.type);
+        
         for (let floor = 0; floor < floors; floor++) {
             const tileY = groundY - (floor + 1) * scaledTileSize + scaledTileSize / 2;
 
@@ -311,10 +316,9 @@ export default class ProceduralLevelGenerator {
                 tile.body.setSize(TILE_SIZE * BUILDING_SCALE, TILE_SIZE * BUILDING_SCALE);
                 this.platforms.add(tile);
 
-                // Add windows on interior floors (more common on industrial buildings)
+                // Add windows using pattern-based logic
                 if (!isLeft && !isRight && !isBottom && floor > 0) {
-                    const windowChance = style.type === 'industrial' ? 0.7 : 0.5;
-                    if (Math.random() < windowChance) {
+                    if (this.shouldPlaceWindow(floor, col, widthTiles, floors, windowPattern)) {
                         const winType = style.type === 'industrial' ? 'building-window' : 
                                       WINDOW_TYPES[Math.floor(Math.random() * WINDOW_TYPES.length)];
                         const win = this.scene.add.image(tileX, tileY, winType);
@@ -376,6 +380,17 @@ export default class ProceduralLevelGenerator {
             aw.setScale(BUILDING_SCALE);
             aw.setDepth(2);
             this.decorations.add(aw);
+        }
+
+        // Add rooftop props and details
+        this.addRooftopDetails(startX, roofTopY, widthTiles, style);
+
+        // Add side decorations (pipes, vents, AC units)
+        this.addBuildingSideDetails(startX, groundY, widthTiles, floors, style);
+
+        // Add balconies or fire escapes on taller buildings
+        if (floors >= 4 && Math.random() < 0.5) {
+            this.addBuildingFeature(startX, groundY, widthTiles, floors, style);
         }
 
         // Add ledge platforms for traversable buildings
@@ -509,6 +524,177 @@ export default class ProceduralLevelGenerator {
             prop.setDepth(1); // In front of buildings
             prop.setOrigin(0.5, 1);
             this.decorations.add(prop);
+        }
+    }
+
+    chooseWindowPattern(buildingType) {
+        const patterns = ['grid', 'alternating', 'sparse', 'dense', 'columns'];
+        return patterns[Math.floor(Math.random() * patterns.length)];
+    }
+
+    shouldPlaceWindow(floor, col, widthTiles, totalFloors, pattern) {
+        switch (pattern) {
+            case 'grid':
+                // Every other floor and column
+                return floor % 2 === 0 && col % 2 === 1;
+            
+            case 'alternating':
+                // Checkerboard pattern
+                return (floor + col) % 2 === 0;
+            
+            case 'sparse':
+                // Random but sparse (30%)
+                return Math.random() < 0.3;
+            
+            case 'dense':
+                // Most positions have windows (80%)
+                return Math.random() < 0.8;
+            
+            case 'columns':
+                // Vertical columns of windows
+                return col === 1 || col === widthTiles - 2;
+            
+            default:
+                return Math.random() < 0.5;
+        }
+    }
+
+    addRooftopDetails(startX, roofTopY, widthTiles, style) {
+        const scaledTileSize = TILE_SIZE * BUILDING_SCALE;
+
+        // Industrial buildings get more rooftop equipment
+        const propChance = style.type === 'industrial' ? 0.7 : 0.3;
+        
+        if (Math.random() < propChance) {
+            const numProps = 1 + Math.floor(Math.random() * 3);
+            
+            for (let i = 0; i < numProps; i++) {
+                const xOffset = (1 + Math.floor(Math.random() * (widthTiles - 2))) * scaledTileSize;
+                const propX = startX + xOffset;
+                const propY = roofTopY - scaledTileSize * 0.5;
+                
+                // Choose prop type based on building style
+                let propType;
+                if (style.type === 'industrial') {
+                    const industrialProps = ['box', 'crate', 'computer', 'machine', 'ac-unit', 'vent'];
+                    propType = industrialProps[Math.floor(Math.random() * industrialProps.length)];
+                } else {
+                    propType = ROOFTOP_PROPS[Math.floor(Math.random() * ROOFTOP_PROPS.length)];
+                }
+                
+                const prop = this.scene.add.image(propX, propY, propType);
+                prop.setScale(BUILDING_SCALE * 0.8);
+                prop.setDepth(3);
+                this.decorations.add(prop);
+            }
+        }
+
+        // Add antenna or water tower on tall industrial buildings
+        if (style.type === 'industrial' && Math.random() < 0.4) {
+            const centerX = startX + (widthTiles * scaledTileSize) / 2;
+            const antennaY = roofTopY - scaledTileSize;
+            
+            const antenna = this.scene.add.rectangle(
+                centerX, 
+                antennaY, 
+                3, 
+                scaledTileSize * 2,
+                0x888888
+            );
+            antenna.setDepth(3);
+            this.decorations.add(antenna);
+            
+            // Add top decoration
+            const topDecor = this.scene.add.circle(centerX, antennaY - scaledTileSize, 5, 0xff0000);
+            topDecor.setDepth(3);
+            this.decorations.add(topDecor);
+        }
+    }
+
+    addBuildingSideDetails(startX, groundY, widthTiles, floors, style) {
+        const scaledTileSize = TILE_SIZE * BUILDING_SCALE;
+
+        // Add pipes or vents on the side of industrial buildings
+        if (style.type === 'industrial' && Math.random() < 0.6) {
+            const side = Math.random() < 0.5 ? 'left' : 'right';
+            const sideX = side === 'left' ? startX : startX + widthTiles * scaledTileSize;
+            
+            const numFloors = Math.min(floors, 3 + Math.floor(Math.random() * 3));
+            for (let f = 1; f < numFloors; f++) {
+                const pipeY = groundY - (f + 0.5) * scaledTileSize;
+                
+                const pipe = this.scene.add.rectangle(
+                    sideX + (side === 'left' ? -5 : 5),
+                    pipeY,
+                    8,
+                    scaledTileSize * 0.8,
+                    0x666666
+                );
+                pipe.setDepth(2);
+                this.decorations.add(pipe);
+            }
+        }
+
+        // Add AC units or vents on residential buildings
+        if (style.type === 'residential' && floors >= 3 && Math.random() < 0.5) {
+            const floorForAC = 1 + Math.floor(Math.random() * (floors - 2));
+            const acY = groundY - (floorForAC + 0.5) * scaledTileSize;
+            const acX = startX + widthTiles * scaledTileSize + scaledTileSize * 0.2;
+            
+            const ac = this.scene.add.image(acX, acY, 'ac-unit');
+            ac.setScale(BUILDING_SCALE * 0.6);
+            ac.setDepth(2);
+            this.decorations.add(ac);
+        }
+    }
+
+    addBuildingFeature(startX, groundY, widthTiles, floors, style) {
+        const scaledTileSize = TILE_SIZE * BUILDING_SCALE;
+        const featureType = Math.random() < 0.5 ? 'balcony' : 'overhang';
+        
+        if (featureType === 'balcony' && widthTiles >= 4) {
+            // Add a balcony on a random mid-floor
+            const balconyFloor = 2 + Math.floor(Math.random() * (floors - 3));
+            const balconyY = groundY - (balconyFloor + 1) * scaledTileSize;
+            const balconyX = startX + widthTiles * scaledTileSize;
+            
+            // Create small extending platform
+            const platform = this.scene.add.rectangle(
+                balconyX + scaledTileSize * 0.5,
+                balconyY,
+                scaledTileSize,
+                5,
+                0x8B4513
+            );
+            platform.setDepth(2);
+            this.decorations.add(platform);
+            
+            // Add railing
+            const railing = this.scene.add.rectangle(
+                balconyX + scaledTileSize * 0.5,
+                balconyY - scaledTileSize * 0.3,
+                scaledTileSize,
+                2,
+                0x654321
+            );
+            railing.setDepth(2);
+            this.decorations.add(railing);
+        } else if (featureType === 'overhang') {
+            // Add an overhang at the top
+            const overhangY = groundY - (floors + 0.5) * scaledTileSize;
+            
+            for (let col = 0; col < widthTiles + 2; col++) {
+                const overhangX = startX + (col - 1) * scaledTileSize + scaledTileSize / 2;
+                const overhang = this.scene.add.rectangle(
+                    overhangX,
+                    overhangY,
+                    scaledTileSize,
+                    5,
+                    0x555555
+                );
+                overhang.setDepth(1);
+                this.decorations.add(overhang);
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import PlayerStats from './PlayerStats';
 
 const PLAYER_COLORS = ['blue', 'green', 'yellow'];
 
@@ -11,6 +12,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         
         super(scene, x, y, 'robots', `robot_${color}Drive1.png`);
         this.robotColor = color;
+        
+        // Initialize stats system
+        this.stats = new PlayerStats(scene);
         
         scene.add.existing(this);
         scene.physics.add.existing(this);
@@ -51,6 +55,20 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     update(time, delta) {
+        // Check if dead
+        if (this.stats.isDead()) {
+            this.setTint(0x666666);
+            this.setVelocity(0, 0);
+            return;
+        }
+
+        // Visual feedback for invulnerability
+        if (this.stats.isInvulnerable) {
+            this.setAlpha(Math.sin(time / 50) * 0.3 + 0.7);
+        } else {
+            this.setAlpha(1);
+        }
+
         const onGround = this.body.blocked.down || this.body.touching.down;
         
         if (onGround) {
@@ -75,16 +93,22 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         if (this.cursors.left.isDown) {
             this.setVelocityX(-this.speed * accel);
             this.setFlipX(true);
-            if (onGround) this.play(`${this._animPrefix}-walk`, true);
+            if (onGround && this.anims.currentAnim?.key !== `${this._animPrefix}-walk`) {
+                this.play(`${this._animPrefix}-walk`);
+            }
         } else if (this.cursors.right.isDown) {
             this.setVelocityX(this.speed * accel);
             this.setFlipX(false);
-            if (onGround) this.play(`${this._animPrefix}-walk`, true);
+            if (onGround && this.anims.currentAnim?.key !== `${this._animPrefix}-walk`) {
+                this.play(`${this._animPrefix}-walk`);
+            }
         } else {
             // Ground friction: stop quickly, air: drift a little
             if (onGround) {
                 this.setVelocityX(0);
-                this.play(`${this._animPrefix}-idle`, true);
+                if (this.anims.currentAnim?.key !== `${this._animPrefix}-idle`) {
+                    this.play(`${this._animPrefix}-idle`);
+                }
             } else {
                 this.setVelocityX(this.body.velocity.x * 0.92); // gentle air drag
             }
@@ -97,7 +121,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this._jumpHeldSince = time;
             this._jumpPressedAt = 0; // consume buffer
             this._lastGroundedAt = 0; // consume coyote
-            this.play(`${this._animPrefix}-jump`);
+            if (this.anims.currentAnim?.key !== `${this._animPrefix}-jump`) {
+                this.play(`${this._animPrefix}-jump`);
+            }
         }
         
         // Variable jump height: hold for higher, release for shorter
@@ -115,7 +141,25 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         
         // Fall animation
         if (!onGround && this.body.velocity.y > 50) {
-            this.play(`${this._animPrefix}-hurt`, true); // use hurt frame as fall
+            if (this.anims.currentAnim?.key !== `${this._animPrefix}-fall`) {
+                this.play(`${this._animPrefix}-fall`);
+            }
+        }
+    }
+
+    takeDamage(amount = 1) {
+        if (this.stats.takeDamage(amount)) {
+            // Damage effect: knockback
+            const knockbackX = this.flipX ? 200 : -200;
+            const knockbackY = -150;
+            this.setVelocity(knockbackX, knockbackY);
+            
+            // Flash red and play damage animation briefly
+            this.play(`${this._animPrefix}-damage`);
+            this.setTint(0xff0000);
+            this.scene.time.delayedCall(100, () => {
+                this.clearTint();
+            });
         }
     }
 }

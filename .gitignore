@@ -8,3 +8,14 @@ dist/
 tmp/
 kenney_*/
 .vscode/
+
+# Asset staging folders
+to-be-processed-assets/
+asset-sources/
+asset-manifest.json
+
+# Improvement system
+improvement-tasks/
+inspo/
+improvement-config.json
+

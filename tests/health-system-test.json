@@ -1,0 +1,15 @@
+{
+  "name": "Health System Test",
+  "description": "Tests the health UI and enemy collision damage system",
+  "actions": [
+    {"action": "wait", "seconds": 3},
+    {"action": "screenshot", "name": "game_start", "saveState": true},
+    {"action": "check_canvas"},
+    {"action": "wait", "seconds": 1},
+    {"action": "press_key", "key": "ArrowRight", "duration": 2000},
+    {"action": "wait", "ms": 500},
+    {"action": "screenshot", "name": "after_movement", "saveState": true},
+    {"action": "wait", "seconds": 2},
+    {"action": "screenshot", "name": "final_state", "saveState": true}
+  ]
+}

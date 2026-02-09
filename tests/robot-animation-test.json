@@ -1,0 +1,21 @@
+{
+  "name": "Robot Animation Test",
+  "description": "Test and analyze robot animations frame by frame",
+  "actions": [
+    {"action": "wait", "seconds": 2},
+    {"action": "screenshot", "name": "initial_idle", "saveState": true},
+    {"action": "wait", "ms": 500},
+    {"action": "screenshot", "name": "idle_500ms", "saveState": true},
+    {"action": "wait", "ms": 500},
+    {"action": "screenshot", "name": "idle_1000ms", "saveState": true},
+    {"action": "press_key", "key": "ArrowRight", "duration": 200},
+    {"action": "wait", "ms": 100},
+    {"action": "screenshot", "name": "walking_start", "saveState": true},
+    {"action": "wait", "ms": 300},
+    {"action": "screenshot", "name": "walking_300ms", "saveState": true},
+    {"action": "wait", "ms": 300},
+    {"action": "screenshot", "name": "walking_600ms", "saveState": true},
+    {"action": "wait", "ms": 500},
+    {"action": "screenshot", "name": "back_to_idle", "saveState": true}
+  ]
+}
