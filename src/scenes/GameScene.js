@@ -58,6 +58,19 @@ export default class GameScene extends Phaser.Scene {
                 .setDepth(-8);
         }
         
+        // Trees layer (closer parallax, scattered placement)
+        const treeTypes = ['tree_green_01', 'tree_green_02', 'tree_green_03', 'tree_green_04', 'tree_green_05'];
+        for (let i = 0; i < 20; i++) {
+            const x = Math.random() * levelWidth;
+            const y = levelHeight - 250 - Math.random() * 100;
+            const treeKey = treeTypes[Math.floor(Math.random() * treeTypes.length)];
+            this.add.image(x, y, treeKey)
+                .setOrigin(0.5, 1)
+                .setScale(0.6 + Math.random() * 0.4)
+                .setScrollFactor(0.5)
+                .setDepth(-7);
+        }
+        
         // Initialize the procedural level generator
         const levelGenerator = new ProceduralLevelGenerator(this);
         
