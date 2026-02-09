@@ -202,6 +202,9 @@ export default class ProceduralLevelGenerator {
     createBackgroundBuilding(startX, groundY, widthTiles, floors, style, roofStyle) {
         const scaledTileSize = TILE_SIZE * BUILDING_SCALE * 0.7; // Smaller for background
         const depth = -5; // Behind everything but in front of parallax
+        
+        // Generate unique tint for this background building (more muted)
+        const bgTint = this.generateBackgroundBuildingTint();
 
         for (let floor = 0; floor < floors; floor++) {
             const tileY = groundY - (floor + 1) * scaledTileSize + scaledTileSize / 2;
@@ -226,9 +229,24 @@ export default class ProceduralLevelGenerator {
                 const tile = this.scene.add.image(tileX, tileY, textureKey);
                 tile.setScale(BUILDING_SCALE * 0.7);
                 tile.setDepth(depth);
-                tile.setAlpha(0.6);
+                tile.setAlpha(0.7); // Increased from 0.6 for better visibility
+                tile.setTint(bgTint); // Apply muted tint
                 tile.setScrollFactor(0.5); // Parallax effect
                 this.decorations.add(tile);
+                
+                // Add sparse windows to background buildings
+                if (!isLeft && !isRight && floor > 0 && floor < floors - 1 && Math.random() < 0.4) {
+                    const win = this.scene.add.rectangle(
+                        tileX, tileY,
+                        scaledTileSize * 0.3,
+                        scaledTileSize * 0.4,
+                        0xFFFF88,
+                        0.3
+                    );
+                    win.setDepth(depth + 1);
+                    win.setScrollFactor(0.5);
+                    this.decorations.add(win);
+                }
             }
         }
 
@@ -288,6 +306,9 @@ export default class ProceduralLevelGenerator {
         // Choose window pattern for this building
         const windowPattern = this.chooseWindowPattern(style.type);
         
+        // Add subtle color variation per building
+        const buildingTint = this.generateBuildingTint(style.type);
+        
         for (let floor = 0; floor < floors; floor++) {
             const tileY = groundY - (floor + 1) * scaledTileSize + scaledTileSize / 2;
 
@@ -312,6 +333,7 @@ export default class ProceduralLevelGenerator {
 
                 const tile = this.scene.add.image(tileX, tileY, textureKey);
                 tile.setScale(BUILDING_SCALE);
+                tile.setTint(buildingTint); // Apply color variation
                 this.scene.physics.add.existing(tile, true);
                 tile.body.setSize(TILE_SIZE * BUILDING_SCALE, TILE_SIZE * BUILDING_SCALE);
                 this.platforms.add(tile);
@@ -324,6 +346,12 @@ export default class ProceduralLevelGenerator {
                         const win = this.scene.add.image(tileX, tileY, winType);
                         win.setScale(BUILDING_SCALE);
                         win.setDepth(1);
+                        
+                        // Add subtle glow to some windows for depth
+                        if (Math.random() < 0.3) {
+                            win.setTint(0xFFFF99); // Warm yellow glow
+                        }
+                        
                         this.decorations.add(win);
                     }
                 }
@@ -384,6 +412,9 @@ export default class ProceduralLevelGenerator {
 
         // Add rooftop props and details
         this.addRooftopDetails(startX, roofTopY, widthTiles, style);
+
+        // Add decorative signs and neon lights
+        this.addBuildingSignage(startX, groundY, widthTiles, floors, style);
 
         // Add side decorations (pipes, vents, AC units)
         this.addBuildingSideDetails(startX, groundY, widthTiles, floors, style);
@@ -532,6 +563,25 @@ export default class ProceduralLevelGenerator {
         return patterns[Math.floor(Math.random() * patterns.length)];
     }
 
+    generateBuildingTint(buildingType) {
+        // Subtle color variations to make buildings more distinct
+        if (buildingType === 'industrial') {
+            // Industrial: cooler tones (blues, grays)
+            const tints = [0xE0E0E0, 0xD0D8E0, 0xE8E8E8, 0xC8D0D8];
+            return tints[Math.floor(Math.random() * tints.length)];
+        } else {
+            // Residential: warmer tones (beiges, soft whites)
+            const tints = [0xFFFFFF, 0xFFF8F0, 0xF8F0E8, 0xF0E8E0];
+            return tints[Math.floor(Math.random() * tints.length)];
+        }
+    }
+
+    generateBackgroundBuildingTint() {
+        // More muted tints for background buildings to create depth
+        const tints = [0xB0B8C0, 0xC0C0C8, 0xA8B0B8, 0xD0D0D8, 0xB8C0C8];
+        return tints[Math.floor(Math.random() * tints.length)];
+    }
+
     shouldPlaceWindow(floor, col, widthTiles, totalFloors, pattern) {
         switch (pattern) {
             case 'grid':
@@ -563,10 +613,10 @@ export default class ProceduralLevelGenerator {
         const scaledTileSize = TILE_SIZE * BUILDING_SCALE;
 
         // Industrial buildings get more rooftop equipment
-        const propChance = style.type === 'industrial' ? 0.7 : 0.3;
+        const propChance = style.type === 'industrial' ? 0.8 : 0.4;
         
         if (Math.random() < propChance) {
-            const numProps = 1 + Math.floor(Math.random() * 3);
+            const numProps = 1 + Math.floor(Math.random() * 4); // Increased variety
             
             for (let i = 0; i < numProps; i++) {
                 const xOffset = (1 + Math.floor(Math.random() * (widthTiles - 2))) * scaledTileSize;
@@ -590,7 +640,7 @@ export default class ProceduralLevelGenerator {
         }
 
         // Add antenna or water tower on tall industrial buildings
-        if (style.type === 'industrial' && Math.random() < 0.4) {
+        if (style.type === 'industrial' && Math.random() < 0.5) {
             const centerX = startX + (widthTiles * scaledTileSize) / 2;
             const antennaY = roofTopY - scaledTileSize;
             
@@ -604,10 +654,26 @@ export default class ProceduralLevelGenerator {
             antenna.setDepth(3);
             this.decorations.add(antenna);
             
-            // Add top decoration
+            // Add top decoration (blinking light)
             const topDecor = this.scene.add.circle(centerX, antennaY - scaledTileSize, 5, 0xff0000);
             topDecor.setDepth(3);
             this.decorations.add(topDecor);
+        }
+        
+        // Add rooftop lighting/satellite dishes
+        if (Math.random() < 0.3) {
+            const lightX = startX + scaledTileSize;
+            const lightY = roofTopY - scaledTileSize * 0.3;
+            
+            // Small light fixture
+            const light = this.scene.add.circle(lightX, lightY, 4, 0xFFFF00, 0.8);
+            light.setDepth(3);
+            this.decorations.add(light);
+            
+            // Glow effect
+            const glow = this.scene.add.circle(lightX, lightY, 8, 0xFFFF00, 0.3);
+            glow.setDepth(2);
+            this.decorations.add(glow);
         }
     }
 
@@ -645,6 +711,59 @@ export default class ProceduralLevelGenerator {
             ac.setScale(BUILDING_SCALE * 0.6);
             ac.setDepth(2);
             this.decorations.add(ac);
+        }
+    }
+
+    addBuildingSignage(startX, groundY, widthTiles, floors, style) {
+        const scaledTileSize = TILE_SIZE * BUILDING_SCALE;
+        
+        // Add neon signs on commercial/industrial buildings
+        if (Math.random() < 0.4) {
+            const signFloor = floors >= 3 ? 1 + Math.floor(Math.random() * 2) : 1;
+            const signY = groundY - signFloor * scaledTileSize;
+            const signX = startX + (widthTiles * scaledTileSize) / 2;
+            
+            // Create glowing neon effect
+            const signWidth = scaledTileSize * (widthTiles * 0.6);
+            const sign = this.scene.add.rectangle(
+                signX,
+                signY - scaledTileSize * 0.3,
+                signWidth,
+                scaledTileSize * 0.3,
+                style.type === 'industrial' ? 0x00FFFF : 0xFF00FF,
+                0.6
+            );
+            sign.setDepth(3);
+            this.decorations.add(sign);
+            
+            // Add glow border
+            const glow = this.scene.add.rectangle(
+                signX,
+                signY - scaledTileSize * 0.3,
+                signWidth + 4,
+                scaledTileSize * 0.3 + 4,
+                style.type === 'industrial' ? 0x00FFFF : 0xFF00FF,
+                0.2
+            );
+            glow.setDepth(2);
+            this.decorations.add(glow);
+        }
+
+        // Add shop awnings with signs on ground floor
+        if (style.type === 'residential' && widthTiles >= 3 && Math.random() < 0.3) {
+            const awningX = startX + scaledTileSize * 1.5;
+            const awningY = groundY - scaledTileSize * 1.2;
+            
+            const awning = this.scene.add.rectangle(
+                awningX,
+                awningY,
+                scaledTileSize * 1.5,
+                scaledTileSize * 0.2,
+                0xFF6666,
+                1
+            );
+            awning.setDepth(2);
+            this.decorations.add(awning);
         }
     }
 
