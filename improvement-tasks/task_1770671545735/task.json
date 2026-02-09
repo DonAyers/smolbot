@@ -1,0 +1,12 @@
+{
+  "id": "task_1770671545735",
+  "name": "Visual Comparison Test",
+  "description": "Test the new comparison system with real changes",
+  "targetComponent": "buildings",
+  "status": "in-progress",
+  "createdAt": "2026-02-09T21:12:25.735Z",
+  "screenshots": [],
+  "inspirationUsed": [],
+  "iterations": [],
+  "notes": []
+}

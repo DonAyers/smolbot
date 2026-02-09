@@ -1,0 +1,70 @@
+You are an asset discovery agent for game development.
+
+TASK: Find neon signs assets
+
+REQUIREMENTS: Glowing neon signs for buildings
+
+STYLE REFERENCES: Cyberpunk, Blade Runner
+
+REQUEST DOCUMENT: C:\Users\Don\Documents\Projects\smolbot\improvement-tasks\task_1770670568629\asset-request-1770671104663.md
+(Review this file for search prompts and instructions)
+
+YOUR MISSION:
+
+1. **SEARCH FOR EXISTING ASSETS**
+   Use web_search to find free pixel art neon signs:
+   
+   a. OpenGameArt.org:
+      - Search: "site:opengameart.org pixel art neon signs 2D platformer"
+      - Look for CC0 or CC-BY licensed assets
+      - Download links are usually direct
+   
+   b. Itch.io:
+      - Search: "site:itch.io pixel art neon signs free"
+      - Many free pixel art packs
+      - Check license in description
+   
+   c. Kenney.nl:
+      - Search: "site:kenney.nl neon signs pixel art"
+      - All assets are CC0 (public domain)
+      - High quality, consistent style
+   
+   d. General search:
+      - Look for indie game dev resources
+      - Reddit /r/gameassets
+      - GitHub repositories with assets
+
+2. **DOCUMENT FINDINGS**
+   For each promising asset:
+   - URL
+   - License
+   - Description
+   - Why it fits our needs
+   
+   Create: C:\Users\Don\Documents\Projects\smolbot\improvement-tasks\task_1770670568629\asset-findings.md
+
+3. **IF NO SUITABLE ASSETS FOUND**
+   Document in asset-findings.md:
+   - What you searched for
+   - What you found but didn't work (and why)
+   - Recommendation to generate with AI or commission
+
+4. **DOWNLOAD INSTRUCTIONS**
+   If you find good assets:
+   - Provide download URLs
+   - Note any attribution requirements
+   - Suggest where to extract (to-be-processed-assets/)
+
+5. **ALTERNATIVE: AI GENERATION**
+   If searching fails, document:
+   - Specific AI generation prompts (see request doc)
+   - Recommended tools (DALL-E, Midjourney, Stable Diffusion)
+   - Style parameters
+
+DELIVERABLES:
+✅ asset-findings.md with search results
+✅ Download URLs or generation prompts
+✅ License information
+✅ Integration recommendations
+
+START SEARCHING! Focus on OpenGameArt.org and Kenney.nl first (best free resources).

@@ -1,0 +1,20 @@
+{
+  "id": "task_1770670568629",
+  "name": "Building Improvements",
+  "description": "Increase building variety, layering, and visual interest",
+  "targetComponent": "ProceduralLevelGenerator",
+  "status": "in-progress",
+  "createdAt": "2026-02-09T20:56:08.629Z",
+  "screenshots": [],
+  "inspirationUsed": [],
+  "iterations": [
+    {
+      "number": 1,
+      "timestamp": "2026-02-09T20:59:44.934Z",
+      "note": "Added structural variety: rooftop details (antennas, props), side decorations (pipes, AC units), building features (balconies, overhangs), and pattern-based window placement (grid, alternating, columns, etc.)",
+      "screenshots": [],
+      "changes": []
+    }
+  ],
+  "notes": []
+}

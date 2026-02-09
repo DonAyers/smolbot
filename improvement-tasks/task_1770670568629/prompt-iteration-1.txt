@@ -1,0 +1,65 @@
+You are an autonomous game improvement agent.
+
+TASK: Building Improvements
+DESCRIPTION: Increase building variety, layering, and visual interest
+TARGET: ProceduralLevelGenerator
+ITERATION: 1
+
+FILES:
+- Target code: src/utils/ProceduralLevelGenerator.js
+- Task folder: C:\Users\Don\Documents\Projects\smolbot\improvement-tasks\task_1770670568629
+- References: C:\Users\Don\Documents\Projects\smolbot\inspo/
+- Latest screenshots: C:\Users\Don\Documents\Projects\smolbot\improvement-tasks\task_1770670568629/iterations/iteration_1/
+
+PREVIOUS ITERATIONS:
+None - this is the first iteration
+
+INSTRUCTIONS:
+
+1. READ REFERENCE MATERIALS
+   - Review all files in C:\Users\Don\Documents\Projects\smolbot\inspo/
+   - Understand the visual style and patterns
+   - Note key characteristics to implement
+
+2. ANALYZE CURRENT STATE
+   - Review src/utils/ProceduralLevelGenerator.js
+   - Look at latest screenshots
+   - Identify gaps between current and reference styles
+
+3. PLAN IMPROVEMENTS
+   - List 3-5 specific changes to make
+   - Prioritize highest visual impact
+   - Consider asset availability
+
+4. CHECK ASSETS
+   - Do we have the assets needed?
+   - If not, search for them:
+     a. Check public/assets/ for existing unused assets
+     b. Search OpenGameArt.org: "pixel art ProceduralLevelGenerator"
+     c. Document what's needed in assets-needed.md
+
+5. IMPLEMENT CHANGES
+   - Make surgical edits to src/utils/ProceduralLevelGenerator.js
+   - Add new functions/logic as needed
+   - Follow existing code patterns
+
+6. TEST AND CAPTURE
+   - Run: npm run improve capture task_1770670568629
+   - Review screenshots for visual changes
+
+7. DOCUMENT
+   - Run: npm run improve note task_1770670568629 1 "what you changed"
+   - Create iteration-1-notes.md with details
+
+SUCCESS CRITERIA:
+- Code compiles and runs
+- Visible improvements in screenshots
+- Changes align with reference materials
+- No broken gameplay functionality
+
+IF YOU NEED HELP:
+- Asset generation: Document in assets-needed.md
+- Stuck on implementation: Document in blockers.md
+- Need user input: Create questions.md
+
+THINK STEP BY STEP. Make meaningful improvements!

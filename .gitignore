@@ -4,19 +4,46 @@ dist/
 *.log
 .env
 .env.local
-*.zip
 tmp/
-screenshots/
-.vscode/
 
-# Asset staging folders
+# Archives and compressed files (never commit these)
+*.zip
+*.rar
+*.7z
+*.tar
+*.tar.gz
+
+# Asset staging folders (processed automatically)
 to-be-processed-assets/
-asset-sources/
+asset-sources/           # Source packs (not used in game)
 asset-manifest.json
 
-# Improvement system (generated files)
-improvement-tasks/
-inspo/
+# Improvement system (generated files, not results)
+improvement-tasks/       # Task outputs
+inspo/                   # Inspiration images (large)
 
-# Generated assets
+# Generated assets (AI-generated, not committed until used)
 generated-assets/
+
+# Screenshots (except progress/)
+screenshots/
+tmp/screenshots/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Reports and logs
+asset-audit-report.json
+*.log
+
+# Keep progress folder for historical screenshots
+!progress/

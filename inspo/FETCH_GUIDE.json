@@ -1,0 +1,23 @@
+{
+  "task": "fetch_inspiration_images",
+  "searchTerms": [
+    "Megaman gameplay screenshot",
+    "Fez game screenshot",
+    "FTL game screenshot"
+  ],
+  "targetFolder": "C:\\Users\\Don\\Documents\\Projects\\smolbot\\inspo",
+  "minimumImages": 3,
+  "instructions": [
+    "1. Use web_search or image search to find gameplay screenshots",
+    "2. Look for high-quality images showing game levels/environments",
+    "3. Download and save to inspo/ folder",
+    "4. Name files descriptively: megaman_level_1.png, fez_village.png, etc.",
+    "5. Verify images are suitable inspiration (clear, representative)"
+  ],
+  "guidelines": [
+    "Focus on level design and visual style",
+    "Avoid UI-heavy screenshots",
+    "Prefer in-game screenshots over artwork",
+    "Look for variety in composition and lighting"
+  ]
+}

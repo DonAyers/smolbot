@@ -1,0 +1,96 @@
+{
+  "name": "Capture screenshots for Building Improvements",
+  "description": "Automated screenshot capture for improvement task",
+  "actions": [
+    {
+      "action": "wait",
+      "seconds": 2
+    },
+    {
+      "action": "screenshot",
+      "name": "capture_0",
+      "saveState": true
+    },
+    {
+      "action": "press_key",
+      "key": "ArrowRight",
+      "duration": 1000
+    },
+    {
+      "action": "wait",
+      "ms": 500
+    },
+    {
+      "action": "wait",
+      "seconds": 2
+    },
+    {
+      "action": "screenshot",
+      "name": "capture_1",
+      "saveState": true
+    },
+    {
+      "action": "press_key",
+      "key": "ArrowRight",
+      "duration": 1000
+    },
+    {
+      "action": "wait",
+      "ms": 500
+    },
+    {
+      "action": "wait",
+      "seconds": 2
+    },
+    {
+      "action": "screenshot",
+      "name": "capture_2",
+      "saveState": true
+    },
+    {
+      "action": "press_key",
+      "key": "ArrowRight",
+      "duration": 1000
+    },
+    {
+      "action": "wait",
+      "ms": 500
+    },
+    {
+      "action": "wait",
+      "seconds": 2
+    },
+    {
+      "action": "screenshot",
+      "name": "capture_3",
+      "saveState": true
+    },
+    {
+      "action": "press_key",
+      "key": "ArrowRight",
+      "duration": 1000
+    },
+    {
+      "action": "wait",
+      "ms": 500
+    },
+    {
+      "action": "wait",
+      "seconds": 2
+    },
+    {
+      "action": "screenshot",
+      "name": "capture_4",
+      "saveState": true
+    },
+    {
+      "action": "press_key",
+      "key": "ArrowRight",
+      "duration": 1000
+    },
+    {
+      "action": "wait",
+      "ms": 500
+    }
+  ]
+}

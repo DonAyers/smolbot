@@ -17,7 +17,11 @@
     "improve:auto": "node scripts/agents/improvement-runner.js run",
     "assets:find": "node scripts/agents/asset-discovery.js search",
     "assets:generate": "node scripts/assets/local-generator.js generate",
-    "assets:generate:batch": "node scripts/assets/local-generator.js batch"
+    "assets:generate:batch": "node scripts/assets/local-generator.js batch",
+    "audit-assets": "node scripts/assets/audit.js",
+    "audit-assets:clean": "node scripts/assets/audit.js --clean",
+    "save-progress": "node scripts/dev/progress.js",
+    "progress:list": "node scripts/dev/progress.js list"
   },
   "keywords": [
     "phaser",

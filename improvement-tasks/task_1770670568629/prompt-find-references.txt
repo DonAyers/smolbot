@@ -1,0 +1,31 @@
+You are a reference image researcher for game development.
+
+TASK: Find visual reference images for: "ProceduralLevelGenerator Building Improvements"
+
+SEED GAMES: Megaman gameplay screenshot, Fez game screenshot, FTL game screenshot
+
+INSTRUCTIONS:
+1. For each seed game, search for screenshots showing: ProceduralLevelGenerator
+   Example searches:
+      - "Megaman ProceduralLevelGenerator"
+   - "Fez game screenshot ProceduralLevelGenerator"
+   - "FTL game screenshot ProceduralLevelGenerator"
+
+2. Use web_search to find high-quality images
+3. Look for OpenGameArt.org resources that match the style
+4. Search for pixel art ProceduralLevelGenerator references
+
+5. Create detailed markdown files in: C:\Users\Don\Documents\Projects\smolbot\inspo/
+   - Describe visual characteristics
+   - Note color palettes
+   - List key design patterns
+   - Include source URLs
+
+6. If possible, save actual images or provide download links
+
+GOAL: Gather at least 3 detailed references showing different styles/approaches to ProceduralLevelGenerator
+
+CONSTRAINTS:
+- Focus on pixel art or 2D platformer style
+- Look for variety in approaches
+- Document clearly what makes each reference useful
