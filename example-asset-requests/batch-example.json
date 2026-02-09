@@ -1,0 +1,32 @@
+[
+  {
+    "name": "flying-security-drone",
+    "type": "enemy",
+    "description": "hostile flying security drone with red warning light, spinning propellers, compact design",
+    "gameStyle": "cyberpunk industrial, 32-bit pixel art"
+  },
+  {
+    "name": "health-crystal",
+    "type": "prop",
+    "description": "glowing green health crystal with energy aura, floating animation ready",
+    "gameStyle": "sci-fi platformer, vibrant colors"
+  },
+  {
+    "name": "metal-platform",
+    "type": "tile",
+    "description": "industrial metal platform with rivets and seams, seamless tileable horizontal",
+    "gameStyle": "retro platformer, limited palette"
+  },
+  {
+    "name": "antenna-tower",
+    "type": "building",
+    "description": "tall industrial antenna tower with blinking lights and satellite dish",
+    "gameStyle": "cyberpunk cityscape background"
+  },
+  {
+    "name": "energy-pickup-icon",
+    "type": "ui",
+    "description": "battery icon for energy pickup, simple clear design with charging symbol",
+    "gameStyle": "retro game UI, high contrast"
+  }
+]

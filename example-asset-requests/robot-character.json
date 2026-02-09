@@ -1,0 +1,6 @@
+{
+  "name": "tank-robot-hero",
+  "type": "character",
+  "description": "small friendly robot with visible tank treads, single antenna on top, glowing friendly eyes, compact body",
+  "gameStyle": "NES Megaman style, 16-color palette, retro platformer"
+}

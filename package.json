@@ -15,7 +15,9 @@
     "watch-assets": "node asset-watcher.js",
     "improve": "node improvement-manager.js",
     "improve:auto": "node agent-improvement-runner.js run",
-    "assets:find": "node asset-discovery-agent.js search"
+    "assets:find": "node asset-discovery-agent.js search",
+    "assets:generate": "node local-asset-generator.js generate",
+    "assets:generate:batch": "node local-asset-generator.js batch"
   },
   "keywords": [
     "phaser",
