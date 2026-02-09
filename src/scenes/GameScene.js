@@ -13,49 +13,56 @@ export default class GameScene extends Phaser.Scene {
     create() {
         const levelWidth = 4000;
         const levelHeight = 1200;
+        const groundLevel = 1000; // Where platforms start
         
         // Set world bounds
         this.physics.world.setBounds(0, 0, levelWidth, levelHeight);
         
-        // Set camera background color (in case graphics don't cover everything)
+        // Set camera background color as fallback
         this.cameras.main.setBackgroundColor('#87CEEB');
         
         // --- Parallax background layers ---
-        // Create a sky rectangle that's larger than the screen to ensure full coverage
-        const skyWidth = this.cameras.main.width * 2; // Extra wide
-        const skyHeight = this.cameras.main.height * 2; // Extra tall
         
+        // 1. SKY - Full static background fixed to camera
+        // Fills the entire camera viewport regardless of world position
         const skyGraphics = this.add.graphics();
-        skyGraphics.fillGradientStyle(0x87CEEB, 0x87CEEB, 0xC8E6FF, 0xC8E6FF, 1);
-        skyGraphics.fillRect(-skyWidth / 2, -skyHeight / 2, skyWidth, skyHeight);
-        skyGraphics.setScrollFactor(0).setDepth(-10);
+        skyGraphics.fillGradientStyle(
+            0x87CEEB, 0x87CEEB,  // Top color (light blue)
+            0xC8E6FF, 0xC8E6FF,  // Bottom color (lighter blue)
+            1
+        );
+        skyGraphics.fillRect(0, 0, 1280, 720); // Match camera size
+        skyGraphics.setScrollFactor(0); // Fixed to camera
+        skyGraphics.setDepth(-100);
         
-        // Far clouds layer (slowest parallax)
+        // 2. FAR CLOUDS - Slow parallax, tiled across world
         const cloudScale = 2;
         const cloudTileW = 256 * cloudScale;
         const cloudTileH = 256 * cloudScale;
-        const numCloudTiles = Math.ceil(levelWidth / cloudTileW) + 1;
+        const numCloudTiles = Math.ceil(levelWidth / cloudTileW) + 2;
+        
         for (let i = 0; i < numCloudTiles; i++) {
-            const cloud = this.add.image(i * cloudTileW, 50, 'bg_clouds')
+            this.add.image(i * cloudTileW, 200, 'bg_clouds')
                 .setOrigin(0, 0)
                 .setDisplaySize(cloudTileW, cloudTileH)
                 .setScrollFactor(0.1)
-                .setDepth(-9)
-                .setAlpha(0.7);
+                .setDepth(-50)
+                .setAlpha(0.8);
         }
         
-        // Hills layer (medium parallax) - positioned at bottom of screen
+        // 3. HILLS - Medium parallax, tiled across world at ground level
         const hillScale = 2.5;
         const hillTileW = 256 * hillScale;
         const hillTileH = 256 * hillScale;
-        const numHillTiles = Math.ceil(levelWidth / hillTileW) + 1;
+        const numHillTiles = Math.ceil(levelWidth / hillTileW) + 2;
+        
         for (let i = 0; i < numHillTiles; i++) {
-            // Position hills at the bottom of the world
-            this.add.image(i * hillTileW, levelHeight - hillTileH, 'bg_hills')
+            // Position hills so their bottom aligns with ground level
+            this.add.image(i * hillTileW, groundLevel - hillTileH, 'bg_hills')
                 .setOrigin(0, 0)
                 .setDisplaySize(hillTileW, hillTileH)
                 .setScrollFactor(0.3)
-                .setDepth(-8);
+                .setDepth(-30);
         }
         
         // Trees layer (closer parallax, scattered placement)
