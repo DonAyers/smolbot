@@ -1,0 +1,77 @@
+{
+  "version": "1.0",
+  "system": "procedural-generation-improvement",
+  "config": {
+    "inspiration": {
+      "folder": "inspo",
+      "minimumImages": 3,
+      "seedTerms": [
+        "Megaman gameplay screenshot",
+        "Fez game screenshot",
+        "FTL game screenshot"
+      ],
+      "additionalTerms": [
+        "pixel art platformer",
+        "retro game buildings",
+        "procedural platformer level design"
+      ]
+    },
+    "screenshots": {
+      "folder": "improvement-tasks",
+      "captureInterval": 5000,
+      "screenshotsPerSession": 10
+    },
+    "tasks": {
+      "folder": "improvement-tasks",
+      "statusFile": "improvement-tasks/task-status.json"
+    }
+  },
+  "activeTasks": [
+    {
+      "id": "task_1770670274966",
+      "name": "Better Building Variety",
+      "description": "Add more types of buildings with different styles",
+      "targetComponent": "buildings",
+      "status": "in-progress",
+      "createdAt": "2026-02-09T20:51:14.966Z",
+      "screenshots": [],
+      "inspirationUsed": [],
+      "iterations": [],
+      "notes": []
+    },
+    {
+      "id": "task_1770670568629",
+      "name": "Building Improvements",
+      "description": "Increase building variety, layering, and visual interest",
+      "targetComponent": "ProceduralLevelGenerator",
+      "status": "in-progress",
+      "createdAt": "2026-02-09T20:56:08.629Z",
+      "screenshots": [],
+      "inspirationUsed": [],
+      "iterations": [
+        {
+          "number": 1,
+          "timestamp": "2026-02-09T20:59:44.934Z",
+          "note": "Added structural variety: rooftop details (antennas, props), side decorations (pipes, AC units), building features (balconies, overhangs), and pattern-based window placement (grid, alternating, columns, etc.)",
+          "screenshots": [],
+          "changes": []
+        }
+      ],
+      "notes": []
+    },
+    {
+      "id": "task_1770671545735",
+      "name": "Visual Comparison Test",
+      "description": "Test the new comparison system with real changes",
+      "targetComponent": "buildings",
+      "status": "in-progress",
+      "createdAt": "2026-02-09T21:12:25.735Z",
+      "screenshots": [],
+      "inspirationUsed": [],
+      "iterations": [],
+      "notes": []
+    }
+  ],
+  "completedTasks": [],
+  "notes": "This file tracks procedural generation improvement tasks. Each task represents an iteration on improving a specific aspect of the game."
+}

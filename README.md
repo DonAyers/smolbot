@@ -18,14 +18,13 @@ Special thanks to Kenney for providing these amazing free assets!
 ## Features
 
 - **Phaser 3** - Modern HTML5 game framework
-- **Side-scrolling camera** - Follows player through 4000x2400 world
-- **Procedural building generation** - Tall buildings with windows and doors
-- **Health System** - Visual health display with damage and invulnerability
-- **Animation System** - Smooth character animations with debugging tools
-- **Asset Auto-Organization** - Drop zip files, get organized assets
-- **Local AI Asset Generation** - Generate pixel art with SDXL + quality evaluation
-- **AI Agent Testing** - Autonomous testing framework using Playwright
-- **Autonomous Improvement System** - Self-improving procedural generation
+- **Procedural generation** - Buildings, platforms, and environments
+- **Health system** - Visual health display with damage mechanics
+- **Animation system** - Smooth character animations with debug tools
+- **Asset auto-organization** - Drop zip files, get organized assets
+- **Local AI generation** - Generate pixel art with SDXL + quality evaluation
+- **AI agent testing** - Autonomous testing framework
+- **Autonomous improvement** - Self-improving game development
 - **Robot sprites with tank treads** - Animated character movement
 - **Vite** - Fast development server with HMR
 
@@ -37,109 +36,51 @@ npm run dev          # Start dev server at http://localhost:3000
 npm run watch-assets # (Optional) Auto-process asset drops
 ```
 
-## Development Commands
+See [docs/QUICK_START.md](docs/QUICK_START.md) for detailed setup.
+
+## Key Commands
 
 ```bash
+# Development
 npm run dev                        # Start dev server
 npm run build                      # Build for production
-npm run preview                    # Preview production build
-npm run watch-assets               # Watch for new assets (auto-unzip & organize)
-npm run organize-assets            # Manually organize assets
-npm run organize-assets:dry-run    # Preview asset organization
-npm run assets:generate <file>     # Generate asset with local AI
-npm run assets:generate:batch <f>  # Batch generate assets
+npm run watch-assets               # Auto-process assets
+
+# Assets
+npm run organize-assets            # Organize from staging
+npm run organize-assets:dry-run    # Preview organization
+
+# AI Testing & Improvement
+npm run test:agent -- tests/*.json # Run automated test
 npm run improve create <name>      # Create improvement task
-npm run improve:auto <task-id>     # Run autonomous improvement
-npm run test:agent -- tests/your-test.json  # Run AI agent test
+npm run improve:auto <task-id> N   # Run N improvement iterations
+
+# AI Asset Generation
+npm run assets:generate <file>     # Generate asset locally
+npm run assets:find <task> <type>  # Find assets online
 ```
 
-## Asset Workflow
+## In-Game Tools
 
-### Automatic (Recommended)
-```bash
-# Terminal 1: Start watcher
-npm run watch-assets
-
-# Terminal 2: Start dev server  
-npm run dev
-
-# Then just drop .zip files into to-be-processed-assets/
-# Everything happens automatically!
-```
-
-### Manual
-```bash
-# Add assets to staging folder
-cp ~/Downloads/asset-pack.zip to-be-processed-assets/
-
-# Organize
-npm run organize-assets
-```
-
-See [ASSET_WATCHER.md](ASSET_WATCHER.md) and [ASSET_WORKFLOW.md](ASSET_WORKFLOW.md) for details.
-
-## AI Agent Testing
-
-This project includes an autonomous testing framework for AI-driven development. See [AGENTS.md](AGENTS.md) for complete documentation.
-
-**Quick test:**
-```bash
-npm run test:agent -- tests/small-tiles-spritesheet.json
-```
-
-Results appear in `tmp/screenshots/` with visual captures and state dumps.
-
-## In-Game Debug Tools
-
-Press these keys while playing:
-- **V** - Sprite Viewer (see all atlas frames)
-- **D** - Animation Debugger (live animation state)
+Press while playing:
+- **V** - Sprite Viewer (see all frames)
+- **D** - Animation Debugger (live state)
 - **R** - Regenerate level
 
 ## Documentation
 
-- [AGENTS.md](AGENTS.md) - AI agent integration guide
-- [ASSET_WATCHER.md](ASSET_WATCHER.md) - Automatic asset processing
-- [ASSET_WORKFLOW.md](ASSET_WORKFLOW.md) - Manual asset organization
-- [ANIMATION_DEBUGGING_LESSONS.md](ANIMATION_DEBUGGING_LESSONS.md) - Animation tips
-- [LOCAL_AI_GENERATION.md](LOCAL_AI_GENERATION.md) - Local AI asset generation with Ollama
-- [LOCAL_AI_SETUP.md](LOCAL_AI_SETUP.md) - Step-by-step setup for AI generation
-- [AUTONOMOUS_AGENTS.md](AUTONOMOUS_AGENTS.md) - Complete autonomous system
-- [SYSTEM_IMPROVEMENTS.md](SYSTEM_IMPROVEMENTS.md) - Research and recommendations
+### Getting Started
+- **[Quick Start](docs/QUICK_START.md)** - 5-minute setup guide
+- **[Asset Management](docs/ASSETS.md)** - Complete asset workflow
+- **[AI Agents](docs/AGENTS.md)** - Testing & improvement systems
+- **[Local AI](docs/LOCAL_AI.md)** - AI asset generation
 
-## Local AI Asset Generation
+### Advanced
+- **[Procedural Improvement](docs/PROCEDURAL_IMPROVEMENT.md)** - Detailed improvement workflow
+- **[Animation Debugging](docs/learning/ANIMATION_DEBUGGING.md)** - Animation tips & lessons
 
-Generate pixel art assets locally with quality evaluation:
-
-```bash
-# Install dependencies (one-time)
-pip install ollamadiffuser
-ollama pull llava:13b
-ollamadiffuser download sdxl
-ollamadiffuser download lora pixel-art-xl-v1.1
-
-# Generate a character
-npm run assets:generate example-asset-requests/robot-character.json
-
-# Batch generate multiple assets
-npm run assets:generate:batch example-asset-requests/batch-example.json
-```
-
-**How it works:**
-1. 🎨 Generates pixel art using **SDXL + Pixel Art LoRA**
-2. 🔍 Evaluates quality using **LLaVA vision model** (0-10 score)
-3. 🔄 Iteratively refines until quality threshold met (default: 7/10)
-4. 💾 Saves best result with metadata
-5. 📁 Ready for auto-organization into game assets
-
-**Features:**
-- Fully local (no API calls, complete privacy)
-- Iterative quality improvement
-- Multiple pixel art styles (8/16/32/64-bit)
-- Game-specific context (Megaman, Celeste, FTL styles)
-- Automatic evaluation with detailed feedback
-
-See [LOCAL_AI_SETUP.md](LOCAL_AI_SETUP.md) for complete setup guide.
+### System Files
+- **[.copilot/instructions.md](.copilot/instructions.md)** - AI assistant guidance
 
 ## License
 

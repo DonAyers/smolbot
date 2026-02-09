@@ -6,7 +6,7 @@ dist/
 .env.local
 *.zip
 tmp/
-kenney_*/
+screenshots/
 .vscode/
 
 # Asset staging folders
@@ -14,8 +14,9 @@ to-be-processed-assets/
 asset-sources/
 asset-manifest.json
 
-# Improvement system
+# Improvement system (generated files)
 improvement-tasks/
 inspo/
-improvement-config.json
 
+# Generated assets
+generated-assets/
