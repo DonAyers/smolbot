@@ -23,19 +23,25 @@ export default class GameScene extends Phaser.Scene {
         
         // --- Parallax background layers ---
         
-        // 1. SKY - Full static background fixed to camera
+        // 1. SKY - Enhanced multi-stop gradient fixed to camera
         // Fills the entire camera viewport regardless of world position
         const skyGraphics = this.add.graphics();
         skyGraphics.fillGradientStyle(
-            0x87CEEB, 0x87CEEB,  // Top color (light blue)
-            0xC8E6FF, 0xC8E6FF,  // Bottom color (lighter blue)
+            0x5B8DBE, 0x5B8DBE,  // Top color (deeper blue)
+            0xB8D8F0, 0xB8D8F0,  // Bottom color (horizon glow)
             1
         );
         skyGraphics.fillRect(0, 0, 1280, 720); // Match camera size
         skyGraphics.setScrollFactor(0); // Fixed to camera
         skyGraphics.setDepth(-100);
         
-        // 2. FAR CLOUDS - Slow parallax, tiled across world
+        // 2. DISTANT MOUNTAINS - Very slow parallax, furthest back
+        this.createDistantMountains(levelWidth, groundLevel);
+        
+        // 3. FAR CITYSCAPE SILHOUETTES - Distant skyscrapers
+        this.createFarCityscape(levelWidth, groundLevel);
+        
+        // 4. FAR CLOUDS - Slow parallax, tiled across world
         const cloudScale = 2;
         const cloudTileW = 256 * cloudScale;
         const cloudTileH = 256 * cloudScale;
@@ -50,7 +56,10 @@ export default class GameScene extends Phaser.Scene {
                 .setAlpha(0.8);
         }
         
-        // 3. HILLS - Medium parallax, tiled across world at ground level
+        // 5. MID-DISTANCE INDUSTRIAL STRUCTURES - Smokestacks, water towers
+        this.createIndustrialStructures(levelWidth, groundLevel);
+        
+        // 6. HILLS - Medium parallax, tiled across world at ground level
         const hillScale = 2.5;
         const hillTileW = 256 * hillScale;
         const hillTileH = 256 * hillScale;
@@ -202,6 +211,135 @@ export default class GameScene extends Phaser.Scene {
         // Only take damage if not already invulnerable
         if (!player.stats.isInvulnerable) {
             player.takeDamage(1);
+        }
+    }
+
+    createDistantMountains(levelWidth, groundLevel) {
+        // Create layered mountain silhouettes in the far background
+        const mountainGraphics = this.add.graphics();
+        const mountainColor = 0x3A4A5C; // Dark blue-gray
+        
+        // Generate 3-4 mountain peaks across the level
+        const numPeaks = 3 + Math.floor(Math.random() * 2);
+        const peakSpacing = levelWidth / numPeaks;
+        
+        for (let i = 0; i < numPeaks; i++) {
+            const peakX = i * peakSpacing + peakSpacing / 2 + (Math.random() - 0.5) * peakSpacing * 0.3;
+            const peakHeight = 200 + Math.random() * 150;
+            const peakWidth = 300 + Math.random() * 200;
+            const baseY = groundLevel - 200;
+            
+            // Draw triangular mountain peak
+            mountainGraphics.fillStyle(mountainColor, 0.6);
+            mountainGraphics.fillTriangle(
+                peakX, baseY - peakHeight,           // Top
+                peakX - peakWidth / 2, baseY,        // Bottom left
+                peakX + peakWidth / 2, baseY         // Bottom right
+            );
+        }
+        
+        mountainGraphics.setDepth(-80);
+        mountainGraphics.setScrollFactor(0.05);
+    }
+
+    createFarCityscape(levelWidth, groundLevel) {
+        // Create distant skyscraper silhouettes
+        const cityscapeColor = 0x556677;
+        const numBuildings = 8 + Math.floor(Math.random() * 4);
+        const spacing = levelWidth / numBuildings;
+        
+        for (let i = 0; i < numBuildings; i++) {
+            const x = i * spacing + Math.random() * spacing * 0.5;
+            const width = 40 + Math.random() * 80;
+            const height = 150 + Math.random() * 250;
+            const y = groundLevel - 250;
+            
+            // Building silhouette
+            const building = this.add.rectangle(
+                x + width / 2,
+                y - height / 2,
+                width,
+                height,
+                cityscapeColor,
+                0.4
+            );
+            building.setDepth(-40);
+            building.setScrollFactor(0.2);
+            building.setOrigin(0.5, 0.5);
+            
+            // Add occasional lit windows as small dots
+            if (Math.random() < 0.6) {
+                const numWindows = 3 + Math.floor(Math.random() * 5);
+                for (let w = 0; w < numWindows; w++) {
+                    const winX = x + 10 + Math.random() * (width - 20);
+                    const winY = y - 20 - Math.random() * (height - 40);
+                    
+                    const window = this.add.circle(winX, winY, 2, 0xFFFF88, 0.6);
+                    window.setDepth(-39);
+                    window.setScrollFactor(0.2);
+                }
+            }
+        }
+    }
+
+    createIndustrialStructures(levelWidth, groundLevel) {
+        // Add smokestacks, water towers, and industrial shapes
+        const numStructures = 5 + Math.floor(Math.random() * 3);
+        
+        for (let i = 0; i < numStructures; i++) {
+            const x = 200 + Math.random() * (levelWidth - 400);
+            const structureType = Math.random();
+            
+            if (structureType < 0.5) {
+                // Smokestack
+                const stackHeight = 100 + Math.random() * 80;
+                const stackWidth = 15 + Math.random() * 10;
+                const y = groundLevel - 180;
+                
+                const stack = this.add.rectangle(
+                    x,
+                    y - stackHeight / 2,
+                    stackWidth,
+                    stackHeight,
+                    0x666666,
+                    0.5
+                );
+                stack.setDepth(-20);
+                stack.setScrollFactor(0.4);
+                
+                // Smoke puff at top
+                const smoke = this.add.circle(x, y - stackHeight, stackWidth, 0x888888, 0.3);
+                smoke.setDepth(-20);
+                smoke.setScrollFactor(0.4);
+                
+            } else {
+                // Water tower or tank
+                const tankHeight = 40 + Math.random() * 30;
+                const tankWidth = 50 + Math.random() * 30;
+                const legHeight = 60 + Math.random() * 40;
+                const y = groundLevel - 150;
+                
+                // Tank body
+                const tank = this.add.ellipse(
+                    x,
+                    y - legHeight - tankHeight / 2,
+                    tankWidth,
+                    tankHeight,
+                    0x777777,
+                    0.5
+                );
+                tank.setDepth(-20);
+                tank.setScrollFactor(0.4);
+                
+                // Support legs
+                const leg1 = this.add.rectangle(x - tankWidth / 3, y - legHeight / 2, 4, legHeight, 0x666666, 0.5);
+                leg1.setDepth(-20);
+                leg1.setScrollFactor(0.4);
+                
+                const leg2 = this.add.rectangle(x + tankWidth / 3, y - legHeight / 2, 4, legHeight, 0x666666, 0.5);
+                leg2.setDepth(-20);
+                leg2.setScrollFactor(0.4);
+            }
         }
     }
 
