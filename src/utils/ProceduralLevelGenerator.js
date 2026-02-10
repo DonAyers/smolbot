@@ -338,7 +338,7 @@ export default class ProceduralLevelGenerator {
                 tile.body.setSize(TILE_SIZE * BUILDING_SCALE, TILE_SIZE * BUILDING_SCALE);
                 this.platforms.add(tile);
 
-                // Add windows using pattern-based logic
+                // Add windows using pattern-based logic with enhanced lighting
                 if (!isLeft && !isRight && !isBottom && floor > 0) {
                     if (this.shouldPlaceWindow(floor, col, widthTiles, floors, windowPattern)) {
                         const winType = style.type === 'industrial' ? 'building-window' : 
@@ -347,10 +347,18 @@ export default class ProceduralLevelGenerator {
                         win.setScale(BUILDING_SCALE);
                         win.setDepth(1);
                         
-                        // Add subtle glow to some windows for depth
-                        if (Math.random() < 0.3) {
-                            win.setTint(0xFFFF99); // Warm yellow glow
+                        // Enhanced window glow with more variety and warmth
+                        const glowChance = Math.random();
+                        if (glowChance < 0.5) {
+                            // 50% warm yellow/orange glow
+                            const warmTints = [0xFFFF99, 0xFFFF88, 0xFFDD88, 0xFFF0AA];
+                            win.setTint(warmTints[Math.floor(Math.random() * warmTints.length)]);
+                        } else if (glowChance < 0.65) {
+                            // 15% cool blue/cyan glow (screens, TVs)
+                            const coolTints = [0x88CCFF, 0x99DDFF, 0xAADDFF];
+                            win.setTint(coolTints[Math.floor(Math.random() * coolTints.length)]);
                         }
+                        // 35% no tint (dark/off windows)
                         
                         this.decorations.add(win);
                     }
@@ -564,21 +572,34 @@ export default class ProceduralLevelGenerator {
     }
 
     generateBuildingTint(buildingType) {
-        // Subtle color variations to make buildings more distinct
+        // Enhanced color variations to make buildings more distinct and vibrant
         if (buildingType === 'industrial') {
-            // Industrial: cooler tones (blues, grays)
-            const tints = [0xE0E0E0, 0xD0D8E0, 0xE8E8E8, 0xC8D0D8];
+            // Industrial: wider range of cool and metallic tones
+            const tints = [
+                0xE0E0E0, 0xD0D8E0, 0xE8E8E8, 0xC8D0D8, // Original grays
+                0xC0D0E0, 0xD8E0E8, 0xB8C8D8, 0xE0E8F0, // More blue tones
+                0xD0D0D8, 0xC8C8D0, 0xE0DFE8  // Subtle purples
+            ];
             return tints[Math.floor(Math.random() * tints.length)];
         } else {
-            // Residential: warmer tones (beiges, soft whites)
-            const tints = [0xFFFFFF, 0xFFF8F0, 0xF8F0E8, 0xF0E8E0];
+            // Residential: expanded warm and inviting tones
+            const tints = [
+                0xFFFFFF, 0xFFF8F0, 0xF8F0E8, 0xF0E8E0, // Original beiges
+                0xFFE8D8, 0xF8E0D0, 0xFFD8C8, // Warm peachy tones
+                0xF0F0E8, 0xF8F8E8, 0xFFF0E0, // Cream tones
+                0xF0E0F0, 0xE8E0F0  // Soft lavenders
+            ];
             return tints[Math.floor(Math.random() * tints.length)];
         }
     }
 
     generateBackgroundBuildingTint() {
-        // More muted tints for background buildings to create depth
-        const tints = [0xB0B8C0, 0xC0C0C8, 0xA8B0B8, 0xD0D0D8, 0xB8C0C8];
+        // Enhanced muted tints for background buildings with better atmospheric depth
+        const tints = [
+            0xB0B8C0, 0xC0C0C8, 0xA8B0B8, 0xD0D0D8, 0xB8C0C8, // Original
+            0xA0A8B8, 0xB8C0D0, 0xC8D0D8, 0xA8B8C0, // More variety
+            0xB0B0C0, 0xC0C8D0, 0xB8B8C8  // Atmospheric blues
+        ];
         return tints[Math.floor(Math.random() * tints.length)];
     }
 
@@ -612,66 +633,84 @@ export default class ProceduralLevelGenerator {
     addRooftopDetails(startX, roofTopY, widthTiles, style) {
         const scaledTileSize = TILE_SIZE * BUILDING_SCALE;
 
-        // Industrial buildings get more rooftop equipment
-        const propChance = style.type === 'industrial' ? 0.8 : 0.4;
+        // Enhanced rooftop equipment with more variety
+        const propChance = style.type === 'industrial' ? 0.9 : 0.5; // Increased chances
         
         if (Math.random() < propChance) {
-            const numProps = 1 + Math.floor(Math.random() * 4); // Increased variety
+            const numProps = 2 + Math.floor(Math.random() * 4); // More props (2-5)
             
             for (let i = 0; i < numProps; i++) {
                 const xOffset = (1 + Math.floor(Math.random() * (widthTiles - 2))) * scaledTileSize;
                 const propX = startX + xOffset;
                 const propY = roofTopY - scaledTileSize * 0.5;
                 
-                // Choose prop type based on building style
+                // Expanded prop types based on building style
                 let propType;
                 if (style.type === 'industrial') {
-                    const industrialProps = ['box', 'crate', 'computer', 'machine', 'ac-unit', 'vent'];
+                    const industrialProps = ['box', 'crate', 'computer', 'machine', 'ac-unit', 'vent', 'vent', 'machine'];
                     propType = industrialProps[Math.floor(Math.random() * industrialProps.length)];
                 } else {
-                    propType = ROOFTOP_PROPS[Math.floor(Math.random() * ROOFTOP_PROPS.length)];
+                    const residentialProps = [...ROOFTOP_PROPS, 'ac-unit', 'vent', 'lamp'];
+                    propType = residentialProps[Math.floor(Math.random() * residentialProps.length)];
                 }
                 
                 const prop = this.scene.add.image(propX, propY, propType);
-                prop.setScale(BUILDING_SCALE * 0.8);
+                prop.setScale(BUILDING_SCALE * (0.7 + Math.random() * 0.3)); // Varied sizes
                 prop.setDepth(3);
                 this.decorations.add(prop);
             }
         }
 
-        // Add antenna or water tower on tall industrial buildings
-        if (style.type === 'industrial' && Math.random() < 0.5) {
+        // Enhanced antenna with better styling on tall industrial buildings
+        if (style.type === 'industrial' && Math.random() < 0.6) { // Increased chance
             const centerX = startX + (widthTiles * scaledTileSize) / 2;
-            const antennaY = roofTopY - scaledTileSize;
+            const antennaHeight = scaledTileSize * (1.5 + Math.random()); // Varied heights
+            const antennaY = roofTopY - antennaHeight / 2;
             
+            // Main antenna pole
             const antenna = this.scene.add.rectangle(
                 centerX, 
                 antennaY, 
-                3, 
-                scaledTileSize * 2,
+                4, // Slightly thicker
+                antennaHeight,
                 0x888888
             );
             antenna.setDepth(3);
             this.decorations.add(antenna);
             
-            // Add top decoration (blinking light)
-            const topDecor = this.scene.add.circle(centerX, antennaY - scaledTileSize, 5, 0xff0000);
+            // Enhanced top decoration (animated blinking light)
+            const lightColors = [0xff0000, 0xff6600, 0xffff00];
+            const lightColor = lightColors[Math.floor(Math.random() * lightColors.length)];
+            const topDecor = this.scene.add.circle(centerX, antennaY - antennaHeight/2, 6, lightColor);
             topDecor.setDepth(3);
             this.decorations.add(topDecor);
+            
+            // Add glow effect
+            const glow = this.scene.add.circle(centerX, antennaY - antennaHeight/2, 10, lightColor, 0.4);
+            glow.setDepth(3);
+            this.decorations.add(glow);
         }
         
-        // Add rooftop lighting/satellite dishes
-        if (Math.random() < 0.3) {
-            const lightX = startX + scaledTileSize;
+        // Enhanced rooftop lighting with better variety
+        if (Math.random() < 0.4) { // Increased chance
+            const lightX = startX + (1 + Math.floor(Math.random() * (widthTiles - 2))) * scaledTileSize;
             const lightY = roofTopY - scaledTileSize * 0.3;
             
-            // Small light fixture
-            const light = this.scene.add.circle(lightX, lightY, 4, 0xFFFF00, 0.8);
+            // Varied light colors for atmosphere
+            const lightColors = [
+                { base: 0xFFFF00, glow: 0xFFFF88 }, // Yellow
+                { base: 0xFFFFFF, glow: 0xFFFFFF }, // White
+                { base: 0xFF6600, glow: 0xFF9944 }  // Orange
+            ];
+            const chosenLight = lightColors[Math.floor(Math.random() * lightColors.length)];
+            
+            // Main light fixture
+            const light = this.scene.add.circle(lightX, lightY, 5, chosenLight.base, 0.9);
             light.setDepth(3);
             this.decorations.add(light);
             
-            // Glow effect
-            const glow = this.scene.add.circle(lightX, lightY, 8, 0xFFFF00, 0.3);
+            // Enhanced glow effect
+            const glow = this.scene.add.circle(lightX, lightY, 12, chosenLight.glow, 0.4);
             glow.setDepth(2);
             this.decorations.add(glow);
         }
@@ -717,53 +756,96 @@ export default class ProceduralLevelGenerator {
     addBuildingSignage(startX, groundY, widthTiles, floors, style) {
         const scaledTileSize = TILE_SIZE * BUILDING_SCALE;
         
-        // Add neon signs on commercial/industrial buildings
-        if (Math.random() < 0.4) {
+        // Enhanced neon signs with more variety and color
+        if (Math.random() < 0.5) { // Increased chance
             const signFloor = floors >= 3 ? 1 + Math.floor(Math.random() * 2) : 1;
             const signY = groundY - signFloor * scaledTileSize;
             const signX = startX + (widthTiles * scaledTileSize) / 2;
             
-            // Create glowing neon effect
-            const signWidth = scaledTileSize * (widthTiles * 0.6);
+            // Expanded color palette for signs
+            const signColors = [
+                0x00FFFF, // Cyan
+                0xFF00FF, // Magenta
+                0xFF0088, // Hot pink
+                0x00FF88, // Green-cyan
+                0xFFFF00, // Yellow
+                0xFF6600  // Orange
+            ];
+            
+            const signColor = style.type === 'industrial' ? 
+                signColors[Math.floor(Math.random() * 3)] : // Industrial: cooler colors
+                signColors[3 + Math.floor(Math.random() * 3)]; // Residential: warmer colors
+            
+            // Create glowing neon effect with varied sizes
+            const signWidth = scaledTileSize * (widthTiles * 0.5 + Math.random() * 0.3);
+            const signHeight = scaledTileSize * (0.25 + Math.random() * 0.15);
             const sign = this.scene.add.rectangle(
                 signX,
                 signY - scaledTileSize * 0.3,
                 signWidth,
-                scaledTileSize * 0.3,
-                style.type === 'industrial' ? 0x00FFFF : 0xFF00FF,
-                0.6
+                signHeight,
+                signColor,
+                0.7 // Slightly more opaque
             );
             sign.setDepth(3);
             this.decorations.add(sign);
             
-            // Add glow border
+            // Enhanced multi-layer glow border
             const glow = this.scene.add.rectangle(
                 signX,
                 signY - scaledTileSize * 0.3,
-                signWidth + 4,
-                scaledTileSize * 0.3 + 4,
-                style.type === 'industrial' ? 0x00FFFF : 0xFF00FF,
-                0.2
+                signWidth + 6,
+                signHeight + 6,
+                signColor,
+                0.3
             );
             glow.setDepth(2);
             this.decorations.add(glow);
+            
+            // Add outer glow layer for more atmosphere
+            const outerGlow = this.scene.add.rectangle(
+                signX,
+                signY - scaledTileSize * 0.3,
+                signWidth + 12,
+                signHeight + 12,
+                signColor,
+                0.1
+            );
+            outerGlow.setDepth(2);
+            this.decorations.add(outerGlow);
         }
 
-        // Add shop awnings with signs on ground floor
-        if (style.type === 'residential' && widthTiles >= 3 && Math.random() < 0.3) {
+        // Enhanced shop awnings with more variety
+        if (style.type === 'residential' && widthTiles >= 3 && Math.random() < 0.4) { // Increased chance
             const awningX = startX + scaledTileSize * 1.5;
             const awningY = groundY - scaledTileSize * 1.2;
+            
+            // Varied awning colors
+            const awningColors = [0xFF6666, 0x66FF66, 0x6666FF, 0xFFFF66, 0xFF66FF];
+            const awningColor = awningColors[Math.floor(Math.random() * awningColors.length)];
             
             const awning = this.scene.add.rectangle(
                 awningX,
                 awningY,
                 scaledTileSize * 1.5,
-                scaledTileSize * 0.2,
-                0xFF6666,
-                1
+                scaledTileSize * 0.25,
+                awningColor,
+                0.9
             );
             awning.setDepth(2);
             this.decorations.add(awning);
+            
+            // Add striped pattern effect
+            const stripe = this.scene.add.rectangle(
+                awningX,
+                awningY,
+                scaledTileSize * 1.5,
+                scaledTileSize * 0.08,
+                0xFFFFFF,
+                0.3
+            );
+            stripe.setDepth(2);
+            this.decorations.add(stripe);
         }
     }
 

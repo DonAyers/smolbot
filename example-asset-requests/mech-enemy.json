@@ -1,0 +1,6 @@
+{
+  "name": "mech-enemy-large",
+  "type": "enemy",
+  "description": "large hostile mech robot with heavy armor plating, bulky mechanical limbs, menacing red glowing eyes, industrial design with rivets and panels, tank treads or heavy feet, shoulder-mounted weapons, twice the size of player robot",
+  "gameStyle": "retro sci-fi platformer like Megaman or Metal Slug"
+}
