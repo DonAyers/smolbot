@@ -1,0 +1,13 @@
+{
+  "name": "enemy-flying-drone",
+  "type": "enemy",
+  "description": "Small hostile flying drone enemy in retro sci-fi pixel art style. Compact spherical body with rotating propeller blades on top, single red glowing eye sensor in center, small weapon ports on sides. Should look threatening but simple, suitable for basic enemy that flies in patterns and shoots at player. Inspired by Mega Man series flying enemies like Fly Boy or Telly. 24x24 pixels, metallic gray and red color scheme.",
+  "gameStyle": "retro pixel art platformer, Mega Man inspired, 16-bit style",
+  "tags": ["enemy", "drone", "flying", "robot", "hostile"],
+  "specifications": {
+    "size": "24x24 pixels",
+    "behavior": "flies horizontally, shoots projectiles",
+    "color_palette": ["#808080", "#A0A0A0", "#FF0000", "#C0C0C0", "#404040"],
+    "animation_frames": ["idle_1", "idle_2", "shoot"]
+  }
+}

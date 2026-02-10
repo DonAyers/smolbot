@@ -4,13 +4,19 @@ import Player from '../components/Player';
 import Enemy from '../components/Enemy';
 import HealthUI from '../components/HealthUI';
 import AnimationDebugger from '../utils/AnimationDebugger';
+import GameConfig from '../utils/GameConfig';
 
 export default class GameScene extends Phaser.Scene {
     constructor() {
         super({ key: 'GameScene' });
     }
 
-    create() {
+    async create() {
+        await GameConfig.load();
+        
+        if (!GameConfig.should('render.player') && !GameConfig.should('render.enemies')) {
+            console.log('⚠️  Both player and enemies disabled - nothing to render');
+        }
         const levelWidth = 4000;
         const levelHeight = 1200;
         const groundLevel = 1000; // Where platforms start
@@ -75,44 +81,57 @@ export default class GameScene extends Phaser.Scene {
         }
         
         // Trees layer (closer parallax, scattered placement)
-        const treeTypes = ['tree_green_01', 'tree_green_02', 'tree_green_03', 'tree_green_04', 'tree_green_05'];
-        for (let i = 0; i < 20; i++) {
-            const x = Math.random() * levelWidth;
-            const y = levelHeight - 250 - Math.random() * 100;
-            const treeKey = treeTypes[Math.floor(Math.random() * treeTypes.length)];
-            this.add.image(x, y, treeKey)
-                .setOrigin(0.5, 1)
-                .setScale(0.6 + Math.random() * 0.4)
-                .setScrollFactor(0.5)
-                .setDepth(-7);
+        if (GameConfig.should('render.trees')) {
+            const treeTypes = ['tree_green_01', 'tree_green_02', 'tree_green_03', 'tree_green_04', 'tree_green_05'];
+            for (let i = 0; i < 20; i++) {
+                const x = Math.random() * levelWidth;
+                const y = levelHeight - 250 - Math.random() * 100;
+                const treeKey = treeTypes[Math.floor(Math.random() * treeTypes.length)];
+                this.add.image(x, y, treeKey)
+                    .setOrigin(0.5, 1)
+                    .setScale(0.6 + Math.random() * 0.4)
+                    .setScrollFactor(0.5)
+                    .setDepth(-7);
+            }
         }
         
         // Initialize the procedural level generator
         const levelGenerator = new ProceduralLevelGenerator(this);
         
         // Generate a level (this will create platforms and obstacles)
-        const platforms = levelGenerator.generateLevel();
+        const platforms = levelGenerator.generateLevel({
+            buildings: GameConfig.should('render.buildings'),
+            props: GameConfig.should('render.props')
+        });
         
         // Add player character with robot spritesheet
-        this.player = new Player(this, 100, 1000);
-        this.physics.add.collider(this.player, platforms);
+        if (GameConfig.should('render.player')) {
+            this.player = new Player(this, 100, 1000);
+            this.physics.add.collider(this.player, platforms);
+        }
         
         // Make camera follow the player with smooth lerp
-        this.cameras.main.startFollow(this.player, true, 0.1, 0.1);
+        if (GameConfig.should('render.player') && this.player) {
+            this.cameras.main.startFollow(this.player, true, 0.1, 0.1);
+        }
         this.cameras.main.setZoom(1);
         this.cameras.main.setBounds(0, 0, levelWidth, levelHeight);
         
         // Create enemies group
-        this.enemies = this.physics.add.group();
-        
-        // Spawn a few enemies on platforms
-        this.spawnEnemies(platforms);
-        
-        // Add collision between enemies and platforms
-        this.physics.add.collider(this.enemies, platforms);
-        
-        // Add collision between player and enemies (damage)
-        this.physics.add.overlap(this.player, this.enemies, this.handlePlayerEnemyCollision, null, this);
+        if (GameConfig.should('render.enemies')) {
+            this.enemies = this.physics.add.group();
+            
+            // Spawn a few enemies on platforms
+            this.spawnEnemies(platforms);
+            
+            // Add collision between enemies and platforms
+            this.physics.add.collider(this.enemies, platforms);
+            
+            // Add collision between player and enemies (damage)
+            if (this.player) {
+                this.physics.add.overlap(this.player, this.enemies, this.handlePlayerEnemyCollision, null, this);
+            }
+        }
         
         // Display instructions (fixed to camera)
         this.add.text(16, 16, 'smolbot', {
@@ -144,10 +163,14 @@ export default class GameScene extends Phaser.Scene {
         }).setScrollFactor(0).setDepth(100);
         
         // Create Health UI (below instructions)
-        this.healthUI = new HealthUI(this, 20, 145, this.player.stats);
+        if (this.player) {
+            this.healthUI = new HealthUI(this, 20, 145, this.player.stats);
+        }
         
         // Create Animation Debugger (press D to toggle)
-        this.animDebugger = new AnimationDebugger(this, this.player);
+        if (this.player) {
+            this.animDebugger = new AnimationDebugger(this, this.player);
+        }
         
         // Add R key to regenerate level
         this.input.keyboard.on('keydown-R', () => {

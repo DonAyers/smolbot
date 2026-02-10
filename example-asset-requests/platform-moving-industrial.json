@@ -1,0 +1,13 @@
+{
+  "name": "platform-moving-industrial",
+  "type": "platform",
+  "description": "Moving platform in retro industrial sci-fi pixel art style. Rectangular metallic platform with mechanical details, glowing edge lights, rivets and panels. Inspired by Mega Man series moving platforms. Should look solid and mechanical. 48x8 pixels, dark metallic colors with yellow/orange edge lighting.",
+  "gameStyle": "retro pixel art platformer, Mega Man inspired, 16-bit style",
+  "tags": ["platform", "moving", "industrial", "mechanical", "level"],
+  "specifications": {
+    "size": "48x8 pixels",
+    "behavior": "moves along set path, player can stand on it",
+    "color_palette": ["#404060", "#606080", "#FFAA00", "#808090", "#202030"],
+    "animation_frames": ["idle", "moving_lights_1", "moving_lights_2"]
+  }
+}

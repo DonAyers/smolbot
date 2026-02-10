@@ -1,0 +1,13 @@
+{
+  "name": "enemy-jumping-bot",
+  "type": "enemy",
+  "description": "Medium-sized ground enemy that hops toward player in retro pixel art style. Compact robot with spring-loaded legs, boxy body, single antenna on top, angry expression. Inspired by Mega Man series hopping enemies like Springer or Metall. Should look bouncy and aggressive. 20x24 pixels, orange and gray color scheme.",
+  "gameStyle": "retro pixel art platformer, Mega Man inspired, 16-bit style",
+  "tags": ["enemy", "hopper", "ground", "robot", "hostile"],
+  "specifications": {
+    "size": "20x24 pixels",
+    "behavior": "hops in arcs toward player, lands and pauses",
+    "color_palette": ["#FF6600", "#CC5500", "#808080", "#FFFF00", "#404040"],
+    "animation_frames": ["crouch", "jump_up", "jump_peak", "land"]
+  }
+}

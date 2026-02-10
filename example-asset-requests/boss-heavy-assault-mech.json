@@ -1,0 +1,14 @@
+{
+  "name": "boss-heavy-assault-mech",
+  "type": "boss",
+  "description": "Large imposing boss mech in retro pixel art style, inspired by Mega Man series robot masters. Heavily armored humanoid robot with oversized shoulder armor, large chest core (weak point), powerful arm cannons on both arms. Should have intimidating presence, detailed mechanical parts, glowing yellow core. Standing pose with battle-ready stance. 64x64 pixels, dark blue and silver color scheme with yellow core and red accents.",
+  "gameStyle": "retro pixel art platformer, Mega Man inspired, 16-bit style",
+  "tags": ["boss", "mech", "robot", "large", "robot-master"],
+  "specifications": {
+    "size": "64x64 pixels",
+    "behavior": "stage boss, multiple attack patterns, weak point on core",
+    "color_palette": ["#003366", "#0066CC", "#C0C0C0", "#FFFF00", "#FF0000", "#808080"],
+    "animation_frames": ["idle", "charge", "shoot", "jump", "hurt", "defeated"],
+    "weak_point": "glowing chest core"
+  }
+}

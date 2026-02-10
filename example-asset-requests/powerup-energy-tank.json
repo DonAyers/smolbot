@@ -1,0 +1,13 @@
+{
+  "name": "powerup-energy-tank",
+  "type": "powerup",
+  "description": "Health restoration item in retro pixel art style. Classic Mega Man large energy tank - cylindrical canister with 'E' marking on front, glowing contents visible through transparent section. Should look valuable and collectible. 16x16 pixels, metallic gray with bright pink/red energy glow.",
+  "gameStyle": "retro pixel art platformer, Mega Man inspired, 16-bit style",
+  "tags": ["powerup", "health", "collectible", "item", "e-tank"],
+  "specifications": {
+    "size": "16x16 pixels",
+    "effect": "fully restores player health when collected",
+    "color_palette": ["#808080", "#C0C0C0", "#FF00FF", "#FF66FF", "#404040"],
+    "animation_frames": ["idle_1", "idle_2", "sparkle"]
+  }
+}

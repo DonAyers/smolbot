@@ -1,0 +1,13 @@
+{
+  "name": "enemy-ground-turret",
+  "type": "enemy",
+  "description": "Small stationary ground turret enemy in retro pixel art style. Compact square base attached to ground, rotating barrel gun on top, red targeting light. Inspired by Mega Man series turret enemies like Picopico-kun. Should be simple but menacing, shoots projectiles when player is in range. 16x16 pixels, dark gray and red color scheme with yellow muzzle flash.",
+  "gameStyle": "retro pixel art platformer, Mega Man inspired, 16-bit style",
+  "tags": ["enemy", "turret", "stationary", "robot", "hostile"],
+  "specifications": {
+    "size": "16x16 pixels",
+    "behavior": "stationary, rotates and shoots at player",
+    "color_palette": ["#404040", "#606060", "#FF0000", "#FFFF00", "#808080"],
+    "animation_frames": ["idle", "charging", "shoot"]
+  }
+}

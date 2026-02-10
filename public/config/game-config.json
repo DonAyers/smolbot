@@ -1,0 +1,14 @@
+{
+  "render": {
+    "player": true,
+    "enemies": true,
+    "buildings": false,
+    "trees": true,
+    "props": true,
+    "parallax": true
+  },
+  "debug": {
+    "showFPS": true,
+    "showHitboxes": false
+  }
+}

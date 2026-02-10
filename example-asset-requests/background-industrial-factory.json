@@ -1,0 +1,13 @@
+{
+  "name": "background-industrial-factory",
+  "type": "background",
+  "description": "Industrial factory background layer in retro pixel art style. Detailed cityscape with factories, smokestacks, pipes, mechanical structures, and industrial buildings. Dark, mechanical atmosphere inspired by Mega Man stages. Should tile horizontally. 256x144 pixels tileable section, dark blues and grays with orange industrial lighting.",
+  "gameStyle": "retro pixel art platformer, Mega Man inspired, 16-bit style parallax background",
+  "tags": ["background", "industrial", "factory", "cityscape", "parallax"],
+  "specifications": {
+    "size": "256x144 pixels (tileable)",
+    "purpose": "background parallax layer for industrial stage theme",
+    "color_palette": ["#1a1a2e", "#16213e", "#0f3460", "#FF6700", "#808080", "#404040"],
+    "details": "smokestacks, pipes, windows with lights, mechanical details"
+  }
+}

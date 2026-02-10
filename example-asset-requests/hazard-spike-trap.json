@@ -1,0 +1,13 @@
+{
+  "name": "hazard-spike-trap",
+  "type": "hazard",
+  "description": "Deadly floor spikes in retro pixel art style. Sharp metallic spikes pointing upward from ground, inspired by classic Mega Man instant-death hazards. Should look dangerous and clearly hazardous. Can have both up and retracted states. 16x16 pixels per tile, metallic gray with dark shadows.",
+  "gameStyle": "retro pixel art platformer, Mega Man inspired, 16-bit style",
+  "tags": ["hazard", "trap", "spikes", "instant-death", "level"],
+  "specifications": {
+    "size": "16x16 pixels",
+    "behavior": "instant death on contact, can be stationary or pop up/down",
+    "color_palette": ["#808080", "#404040", "#C0C0C0", "#606060"],
+    "animation_frames": ["retracted", "extending", "extended", "retracting"]
+  }
+}

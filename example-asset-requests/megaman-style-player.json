@@ -1,0 +1,13 @@
+{
+  "name": "megaman-style-player",
+  "type": "character",
+  "description": "A side-scrolling action platformer character sprite in the style of Mega Man. Blue armored robot with helmet, arm cannon on right arm, running and jumping poses. Pixel art style, 32x32 size, clean outlines, limited color palette (blues, light blues, white for eyes). Needs: idle, run cycle (3-4 frames), jump, fall, shoot while standing, shoot while running, slide, and hurt poses.",
+  "gameStyle": "retro pixel art platformer, Mega Man inspired, 16-bit style",
+  "tags": ["character", "player", "megaman", "robot", "hero", "platformer"],
+  "specifications": {
+    "size": "32x32 pixels",
+    "frames_needed": ["idle", "run_1", "run_2", "run_3", "jump", "fall", "shoot_stand", "shoot_run", "slide", "hurt"],
+    "color_palette": ["#0066CC", "#0088FF", "#FFFFFF", "#003366", "#00AAFF"],
+    "style_notes": "Clean pixel art, strong silhouette, arm cannon clearly visible, heroic pose"
+  }
+}

@@ -103,7 +103,9 @@ export default class ProceduralLevelGenerator {
         this.noise = createNoise2D();
     }
 
-    generateLevel() {
+    generateLevel(options = {}) {
+        const { buildings = true, props = true } = options;
+        
         this.platforms = this.scene.physics.add.staticGroup();
         this.decorations = this.scene.add.group();
 
@@ -119,10 +121,14 @@ export default class ProceduralLevelGenerator {
         this.createGround(levelWidth, groundY);
 
         // 2. Add trees in background (before buildings)
-        this.generateTrees(levelWidth, groundY);
+        if (props) {
+            this.generateTrees(levelWidth, groundY);
+        }
 
         // 3. Generate buildings
-        this.generateBuildings(levelWidth, groundY);
+        if (buildings) {
+            this.generateBuildings(levelWidth, groundY);
+        }
 
         // 4. Add floating platforms
         this.generateFloatingPlatforms(levelWidth, groundY);

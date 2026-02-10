@@ -1,0 +1,13 @@
+{
+  "name": "powerup-weapon-energy",
+  "type": "powerup",
+  "description": "Weapon energy refill item in retro pixel art style. Small glowing energy capsule that restores weapon ammo, inspired by Mega Man series weapon energy pickups. Simple capsule shape with 'W' marking, bright cyan glow. 12x12 pixels.",
+  "gameStyle": "retro pixel art platformer, Mega Man inspired, 16-bit style",
+  "tags": ["powerup", "weapon", "ammo", "collectible", "item"],
+  "specifications": {
+    "size": "12x12 pixels",
+    "effect": "restores weapon energy",
+    "color_palette": ["#00FFFF", "#00AAAA", "#FFFFFF", "#0088AA"],
+    "animation_frames": ["idle_1", "idle_2"]
+  }
+}

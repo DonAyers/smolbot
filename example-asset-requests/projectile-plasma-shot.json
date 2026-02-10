@@ -1,0 +1,13 @@
+{
+  "name": "projectile-plasma-shot",
+  "type": "projectile",
+  "description": "Player weapon projectile sprite in retro pixel art style. Classic Mega Man lemon shot / plasma bullet. Small glowing energy sphere with trailing particles, bright yellow-white core with blue outer glow. Should look powerful but simple. 8x8 pixels base size with 2-3 frame animation for pulsing/spinning effect.",
+  "gameStyle": "retro pixel art platformer, Mega Man inspired, 16-bit style",
+  "tags": ["projectile", "weapon", "bullet", "energy", "player-attack"],
+  "specifications": {
+    "size": "8x8 pixels",
+    "behavior": "travels horizontally, damages enemies on contact",
+    "color_palette": ["#FFFF00", "#FFFFFF", "#00AAFF", "#0088FF"],
+    "animation_frames": ["pulse_1", "pulse_2", "pulse_3"]
+  }
+}

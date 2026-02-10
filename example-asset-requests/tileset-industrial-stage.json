@@ -1,0 +1,13 @@
+{
+  "name": "tileset-industrial-stage",
+  "type": "tileset",
+  "description": "Complete industrial stage tileset in retro pixel art style. Includes ground tiles, walls, pipes, ladders, platforms, decorative elements. Mechanical industrial theme with riveted metal panels, grating, pipes, and hazard stripes. Inspired by Mega Man stage tilesets. 16x16 pixel tiles in a sheet layout, metallic blues and grays with yellow hazard markings.",
+  "gameStyle": "retro pixel art platformer, Mega Man inspired, 16-bit style",
+  "tags": ["tileset", "industrial", "stage", "level", "mechanical"],
+  "specifications": {
+    "tile_size": "16x16 pixels each",
+    "sheet_layout": "8x8 grid (64 tiles total)",
+    "color_palette": ["#404060", "#606080", "#808090", "#FFFF00", "#FF6600", "#202030"],
+    "includes": "solid ground, platforms, walls, corners, ladders, pipes, decorative panels, hazard stripes"
+  }
+}
