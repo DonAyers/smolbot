@@ -2,6 +2,8 @@
 
 A procedurally generated 2D side-scrolling platformer built with Phaser 3.
 
+> **🔬 Experimental Unity Branch**: This branch explores setting up a Unity game engine environment for agentic development. See [docs/UNITY_POC.md](docs/UNITY_POC.md) for details.
+
 ## Credits
 
 ### Game Assets
@@ -74,6 +76,12 @@ Press while playing:
 - **[Asset Management](docs/ASSETS.md)** - Complete asset workflow
 - **[AI Agents](docs/AGENTS.md)** - Testing & improvement systems
 - **[Local AI](docs/LOCAL_AI.md)** - AI asset generation
+
+### Unity POC (Experimental)
+- **[Unity POC Overview](docs/UNITY_POC.md)** - Unity agentic development exploration
+- **[Unity Roadmap](docs/UNITY_ROADMAP.md)** - Implementation plan with 28 issues
+- **[Unity Quick Start](docs/UNITY_QUICK_START.md)** - Setup guide for Unity POC
+- **[Unity vs Phaser](docs/UNITY_VS_PHASER.md)** - Detailed comparison
 
 ### Advanced
 - **[Procedural Improvement](docs/PROCEDURAL_IMPROVEMENT.md)** - Detailed improvement workflow
