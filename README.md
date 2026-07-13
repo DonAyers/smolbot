@@ -39,6 +39,23 @@ smolbot/
 └── tests/            automated tests (busted)
 ```
 
+## Viewing over the network (headless machines)
+
+If you're running on a headless Linux box and want to view the game from
+another computer on the same LAN, use `scripts/serve-vnc.sh`. It starts a
+virtual display with `Xvnc` (from `tigervnc`) and points `love` at it, so
+any VNC client can connect and see the game window.
+
+```sh
+# one-time setup: install tigervnc, then set a VNC password
+printf '<your password>\n' | vncpasswd -f > ~/.vnc/passwd
+
+# start serving
+scripts/serve-vnc.sh          # display :1, 5901, 1000x600
+```
+
+Then connect a VNC client to `<machine-ip>:5901` using the password you set.
+
 ## Linting
 
 ```sh
