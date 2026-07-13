@@ -1,0 +1,15 @@
+# LÖVE build artifacts
+/*.love
+/dist/
+/build/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+*.swp
+
+# Lua tooling
+.luacheckcache
