@@ -13,3 +13,11 @@ Thumbs.db
 
 # Lua tooling
 .luacheckcache
+
+# Secrets -- never commit these
+.env
+.env.*
+.vnc/
+*.pem
+id_rsa*
+id_ed25519*
