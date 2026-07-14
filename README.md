@@ -47,14 +47,18 @@ virtual display with `Xvnc` (from `tigervnc`) and points `love` at it, so
 any VNC client can connect and see the game window.
 
 ```sh
-# one-time setup: install tigervnc, then set a VNC password
-printf '<your password>\n' | vncpasswd -f > ~/.vnc/passwd
+# one-time setup: install tigervnc, then set a VNC password.
+# Replace CHOOSE_YOUR_OWN_PASSWORD below with a real password -- do not
+# run this command verbatim, it is a template, not a literal value.
+printf 'CHOOSE_YOUR_OWN_PASSWORD\n' | vncpasswd -f > ~/.vnc/passwd
 
 # start serving
 scripts/serve-vnc.sh          # display :1, 5901, 1000x600
 ```
 
-Then connect a VNC client to `<machine-ip>:5901` using the password you set.
+Then connect a VNC client to `THIS_MACHINES_LAN_IP:5901` using the password
+you set above (replace `THIS_MACHINES_LAN_IP` with this machine's actual
+LAN address, e.g. from `ip -4 addr`).
 
 ## Linting
 
