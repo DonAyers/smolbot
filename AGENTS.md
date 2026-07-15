@@ -36,6 +36,13 @@ Keep changes small, playable, and easy to review.
   via relative paths from project root (e.g. `"assets/sprites/hero.png"`).
 - Keep placeholder art (colored rectangles) until real art is ready rather
   than blocking gameplay work on asset creation.
+- New sprite/animation art should be generated with `pixegen`
+  (github.com/DonAyers/pixegen, cloned as a sibling directory next to
+  `smolbot`, e.g. `../pixegen`) using its `love2d` export format -- see the
+  "Art pipeline" section in `README.md` for the exact command shape and a
+  known transparency quirk to watch for. Load the resulting `.lua` sheet
+  data with `require()` the way `src/player.lua` does, rather than hardcoding
+  quad rects by hand.
 
 ## Git
 

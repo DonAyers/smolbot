@@ -39,6 +39,37 @@ smolbot/
 └── tests/            automated tests (busted)
 ```
 
+## Art pipeline
+
+Sprite art is generated with [pixegen](https://github.com/DonAyers/pixegen), a
+separate sibling tool (clone it next to `smolbot`, not inside it) that turns
+text prompts into retro pixel-art sprites and exports directly to LÖVE's
+`.lua` quad/animation format.
+
+```sh
+cd ../pixegen
+npm install
+cp .env.example .env   # add POLLINATIONS_API_KEY
+
+node --env-file=.env bin/pixegen.js sheet "a knight with a sword" \
+  --anim walk --view side --recipe nes-classic -s 32x48 \
+  --format love2d --name knight -o ../smolbot/assets/sprites/knight-walk/
+```
+
+This writes a packed sprite sheet PNG plus a `.lua` file with quad rects,
+per-frame durations, and animation tables -- see `src/player.lua` for how to
+`require()` and draw from it (frame pivots are bottom-center by default, so
+they line up with a `self.x, self.y` top-left collision rect the same size
+as the sprite).
+
+**Known quirk:** the default model doesn't always return real alpha
+transparency for `--recipe nes-classic`, even though it's requested --
+sometimes you get an opaque near-white background instead. If that happens,
+chroma-key it out with a short `pngjs` script (sample the most frequent
+color in the image, zero the alpha of close matches) before dropping the
+PNG into `assets/sprites/`. Worth raising upstream in `pixegen` if it keeps
+recurring.
+
 ## Viewing over the network (headless machines)
 
 If you're running on a headless Linux box and want to view the game from
@@ -73,7 +104,8 @@ gravity and jumping. Next steps as this grows into a real side-scroller:
 
 - [ ] Camera that follows the player
 - [ ] Tile-based level loading
-- [ ] Sprite animation (replace rectangle with real art)
+- [x] Sprite animation (replace rectangle with real art) -- player walk
+      cycle generated via `pixegen`, see "Art pipeline" above
 - [ ] Enemies / hazards
 - [ ] Scrolling parallax background
 - [ ] Sound effects and music
